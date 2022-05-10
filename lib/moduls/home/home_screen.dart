@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 
@@ -48,19 +49,17 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Padding(
+    return Padding(
         padding: const EdgeInsets.all(20),
         child: SingleChildScrollView(
           child: Container(
-            color: ColorManager.grey.withOpacity(.3),
+
             child: GridView.count(
               crossAxisCount: 2,
               shrinkWrap: true,
               mainAxisSpacing: AppSize.s1,
               crossAxisSpacing:AppSize.s1 ,
-              childAspectRatio: 1/1.46,
+              childAspectRatio: 1/1.50,
               physics: NeverScrollableScrollPhysics(),
               children: List.generate(product.length, (index) {
 
@@ -71,77 +70,84 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
         ),
+      );
+
+
+  }
+   Widget buildGridProduct(ProductModel productsData,context){
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+
+
       ),
 
-    );
-  }
-  Widget buildGridProduct(ProductModel productsData,context){
-    return Container(
-      color: Colors.white,
-      child: Card(
+      child: Column(
 
-        child: Column(
-
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              alignment: AlignmentDirectional.bottomStart,
-              children: [
-                Image(image: NetworkImage('${productsData.image}'),
-                  width: double.infinity,
-                  fit: BoxFit.fill,
-
-                  height: 150,
-
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Stack(
+            alignment: AlignmentDirectional.bottomStart,
+            children: [
+              Container(
+                height: 150,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                   
+                    image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: NetworkImage('https://st.depositphotos.com/1006706/2671/i/600/depositphotos_26715369-stock-photo-which-way-to-choose-3d.jpg'
+                        ))
                 ),
-                if(productsData.old_Price!=0)
-                  Container(
+              ),
+              if(productsData.old_Price!=0)
+                Container(
 
-                      padding: EdgeInsets.symmetric(horizontal: 5),
-                      color: Colors.red,
-                      child: Text('DISCOUNT',style: TextStyle(fontSize: 10,color: Colors.white))
-                  )
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('${productsData.name}',maxLines: 2,overflow: TextOverflow.ellipsis,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('${productsData.price}',maxLines: 2,overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.blue)),
-                      SizedBox(width: 20,),
-                      if(productsData.old_Price!=0)
-                        Text('${productsData.old_Price}',
-                          style: TextStyle(color: Colors.grey,
-                              decoration: TextDecoration.lineThrough),),
-                      Spacer(),
-                      // IconButton(
-                      //     padding: EdgeInsets.zero,
-                      //
-                      //     onPressed: (){
-                      //       print(productsData.id);
-                      //       ShopCubit.get(context).changeFavoriteShop(id: productsData.id!);
-                      //
-                      //     }
-                      //     , icon:CircleAvatar(
-                      //     backgroundColor: ShopCubit.get(context).favorite[productsData.id]!?Colors.blue:Colors.grey,
-                      //     radius: 15,
-                      //     child: Icon(Icons.favorite_border,color: Colors.white,)))
-                    ],
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    color: Colors.red,
+                    child: Text('DISCOUNT',style: TextStyle(fontSize: 10,color: Colors.white))
+                )
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('${productsData.name}',maxLines: 2,overflow: TextOverflow.ellipsis,),
+                SizedBox(height: 5,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('${productsData.price}',maxLines: 2,overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.blue)),
+                    SizedBox(width: 20,),
+                    if(productsData.old_Price!=0)
+                      Text('${productsData.old_Price}',
+                        style: TextStyle(color: Colors.grey,
+                            decoration: TextDecoration.lineThrough),),
+                    Spacer(),
+                    // IconButton(
+                    //     padding: EdgeInsets.zero,
+                    //
+                    //     onPressed: (){
+                    //       print(productsData.id);
+                    //       ShopCubit.get(context).changeFavoriteShop(id: productsData.id!);
+                    //
+                    //     }
+                    //     , icon:CircleAvatar(
+                    //     backgroundColor: ShopCubit.get(context).favorite[productsData.id]!?Colors.blue:Colors.grey,
+                    //     radius: 15,
+                    //     child: Icon(Icons.favorite_border,color: Colors.white,)))
+                  ],
 
-                  )
-                ],),
-            )
+                )
+              ],),
+          )
 
 
 
-          ],
+        ],
 
-        ),
       ),
     );
   }

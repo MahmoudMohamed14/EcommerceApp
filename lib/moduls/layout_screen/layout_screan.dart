@@ -2,6 +2,8 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:projectgraduate/models/product_model.dart';
+import 'package:projectgraduate/moduls/home/home_screen.dart';
 
 
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/cubit_layout.dart';
@@ -29,6 +31,7 @@ class LayoutScreen extends StatelessWidget {
           var cubit =CubitLayout.get(context);
     return Scaffold(
 
+
 bottomNavigationBar:  CurvedNavigationBar(
   backgroundColor: ColorManager.white,
   color:  ColorManager.primary,
@@ -45,19 +48,9 @@ bottomNavigationBar:  CurvedNavigationBar(
   height: 50,
 ),
       appBar: AppBar(
-        title: Text(cubit.listTitle[cubit.index]),
+        title: Text('${cubit.listTitle[cubit.index]}'),
       ),
-       body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-
-
-            ],
-          ),
-        ),
-      ),
+       body: cubit.listWidget[cubit.index],
     );
     },
 

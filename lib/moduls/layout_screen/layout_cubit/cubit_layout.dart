@@ -62,7 +62,7 @@ class CubitLayout extends Cubit<StateLayout> {
 
 
 
-   
+
 
   }
   void addProduct({String? name,String? price,String? old_price,String?description, String ?image, String ?category}){
