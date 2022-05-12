@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:projectgraduate/moduls/layout_screen/layout_cubit/cubit_layout.dart';
 
 
 import '../../models/product_model.dart';
@@ -8,44 +9,8 @@ import '../../shared/constant/values_manager.dart';
 
 class HomeScreen extends StatelessWidget {
 
-  List<ProductModel>product=[
-    ProductModel(
-        category: "frist",
-        id: "tesr"
-        ,image:'https://st.depositphotos.com/1006706/2671/i/600/depositphotos_26715369-stock-photo-which-way-to-choose-3d.jpg'
-        ,name:"package:graduationproject"
-        ,price: 30  ),
-    ProductModel(
-        category: "frist",
-        id: "tesr"
-        ,image:'https://st.depositphotos.com/1006706/2671/i/600/depositphotos_26715369-stock-photo-which-way-to-choose-3d.jpg'
 
-        ,name:"package:graduationproject"
-        ,price: 30  ),
-    ProductModel(
-        category: "frist",
-        id: "tesr"
-        ,image:'https://st.depositphotos.com/1006706/2671/i/600/depositphotos_26715369-stock-photo-which-way-to-choose-3d.jpg'
 
-        ,name:"package:graduationproject"
-        ,price: 30 ,old_Price: 87 ),
-    ProductModel(
-        category: "frist",
-        id: "tesr"
-        ,image:'https://st.depositphotos.com/1006706/2671/i/600/depositphotos_26715369-stock-photo-which-way-to-choose-3d.jpg'
-
-        ,name:"package:graduationproject"
-        ,price: 30  ),
-    ProductModel(
-        category: "frist",
-        id: "tesr"
-        ,image:'https://st.depositphotos.com/1006706/2671/i/600/depositphotos_26715369-stock-photo-which-way-to-choose-3d.jpg'
-
-        ,name:"package:graduationproject"
-        ,price: 37,
-        old_Price: 56  ),
-
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -61,10 +26,10 @@ class HomeScreen extends StatelessWidget {
               crossAxisSpacing:AppSize.s1 ,
               childAspectRatio: 1/1.50,
               physics: NeverScrollableScrollPhysics(),
-              children: List.generate(product.length, (index) {
+              children: List.generate(CubitLayout.get(context).listAllProduct!.length, (index) {
 
 
-                return buildGridProduct(product[index], context);
+                return buildGridProduct(CubitLayout.get(context).listAllProduct![index], context);
               }),
 
             ),
@@ -100,7 +65,7 @@ class HomeScreen extends StatelessWidget {
                         ))
                 ),
               ),
-              if(productsData.old_Price!=0)
+              if(productsData.old_Price! > 0)
                 Container(
 
                     padding: EdgeInsets.symmetric(horizontal: 5),
@@ -121,7 +86,7 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     Text('${productsData.price}',maxLines: 2,overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.blue)),
                     SizedBox(width: 20,),
-                    if(productsData.old_Price!=0)
+                    if(productsData.old_Price!>0)
                       Text('${productsData.old_Price}',
                         style: TextStyle(color: Colors.grey,
                             decoration: TextDecoration.lineThrough),),
