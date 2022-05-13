@@ -8,6 +8,8 @@ import 'package:projectgraduate/moduls/home/home_screen.dart';
 
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/cubit_layout.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
+import 'package:projectgraduate/moduls/login/login_screen.dart';
+import 'package:projectgraduate/shared/componant/componant.dart';
 
 import 'package:projectgraduate/shared/constant/color_manager.dart';
 import 'package:projectgraduate/shared/constant/icon_broken.dart';
@@ -49,6 +51,10 @@ bottomNavigationBar:  CurvedNavigationBar(
 ),
       appBar: AppBar(
         title: Text('${cubit.listTitle[cubit.index]}'),
+        actions: [IconButton(icon: Icon(IconBroken.Logout),onPressed: (){
+          signOut(context, LoginScreen());
+
+        },)],
       ),
        body: cubit.listWidget[cubit.index],
     );

@@ -12,10 +12,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:projectgraduate/models/category_model.dart';
 import 'package:projectgraduate/models/product_model.dart';
+import 'package:projectgraduate/models/user_model.dart';
 import 'package:projectgraduate/moduls/add_category/add_category_screen.dart';
 import 'package:projectgraduate/moduls/category_screen/category_screen.dart';
 import 'package:projectgraduate/moduls/home/home_screen.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
+import 'package:projectgraduate/shared/constant/data_shared.dart';
 
 
 class CubitLayout extends Cubit<StateLayout> {
@@ -199,5 +201,17 @@ class CubitLayout extends Cubit<StateLayout> {
     }).catchError((onError){
       emit(GetCategoryErrorState());
     });
+  }
+  void getUserData(){
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId).get().then((value) {
+          myData=UsersModel.fromJson(json: value.data()!);
+          print(value.data()!['name']);
+
+    }).catchError((onError){
+
+    });
+
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/cubit_layout.dart';
+import 'package:projectgraduate/shared/constant/data_shared.dart';
 
 import 'bloc_observer.dart';
 import 'moduls/layout_screen/layout_screan.dart';
@@ -23,6 +24,7 @@ void main()async {
     //   projectId: 'projectgraduate-ba744',
     // ),
   );
+  uId=FirebaseAuth.instance.currentUser!.uid;
   BlocOverrides.runZoned(
         () {
       runApp(
@@ -40,12 +42,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<CubitLayout>(create: (context)=>CubitLayout()..getProducts()..changeBottomNav(index: 1)..getCategory()),
+        BlocProvider<CubitLayout>(create: (context)=>CubitLayout()..getProducts()..changeBottomNav(index: 1)..getCategory()..getUserData()),
       ],
       child: MaterialApp(
 
         debugShowCheckedModeBanner: false,
-        theme:getApplicationTheme(),
+        theme:getApplicationTheme(context),
         supportedLocales:const [
           Locale('en',),
           Locale('ar'),

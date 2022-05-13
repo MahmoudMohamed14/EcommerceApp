@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:projectgraduate/moduls/layout_screen/layout_screan.dart';
 import 'package:projectgraduate/moduls/register/cubit/register_cubit.dart';
 import 'package:projectgraduate/moduls/register/cubit/register_states.dart';
 
@@ -37,7 +38,7 @@ class Register extends StatelessWidget {
       child: BlocConsumer<RegisterCubit,RegisterStates>(
           listener: (context,state){
             if(state is CreateUserSuccessState||state is PostClassNameSuccessState){
-               navigateAndFinish(context, HomeScreen());
+               navigateAndFinish(context, LayoutScreen());
               // CubitApp.get(context).init();
               showToast(text: 'Create Successful', state: ToastState.SUCCESS);
 
