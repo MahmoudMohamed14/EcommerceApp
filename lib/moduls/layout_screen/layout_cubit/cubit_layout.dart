@@ -178,6 +178,7 @@ class CubitLayout extends Cubit<StateLayout> {
         .add(productModel
         .toMap()).then((value) {
       emit(AddCategorySuccessState());
+      getCategory();
 
     }).catchError((onError){
       emit(AddCategoryErrorState());
@@ -186,17 +187,18 @@ class CubitLayout extends Cubit<StateLayout> {
   List<CategoryModel>?listAllCategory;
   void getCategory(){
     listAllCategory=[];
-    emit(GetCategorySuccessState());
+    emit(GetCategoryLoadingState());
     FirebaseFirestore
         .instance.
-    collection('Category')
+        collection('Category')
         .get()
         .then((value) {
       value.docs.forEach((element) {
-
         listAllCategory!.add(CategoryModel.fromJson(element.data()));
-        emit(GetCategorySuccessState());
+
       });
+      emit(GetCategorySuccessState());
+
 
     }).catchError((onError){
       emit(GetCategoryErrorState());
@@ -214,4 +216,5 @@ class CubitLayout extends Cubit<StateLayout> {
     });
 
   }
+
 }

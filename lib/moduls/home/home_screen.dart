@@ -1,8 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:projectgraduate/models/category_model.dart';
+import 'package:projectgraduate/moduls/add_category/add_category_screen.dart';
 import 'package:projectgraduate/moduls/details_screen/details_screen.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/cubit_layout.dart';
+import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
 import 'package:projectgraduate/shared/componant/componant.dart';
+import 'package:projectgraduate/shared/constant/fonst_manager.dart';
+import 'package:projectgraduate/shared/constant/icon_broken.dart';
+import 'package:projectgraduate/shared/constant/test_styles_manager.dart';
 
 
 import '../../models/product_model.dart';
@@ -13,28 +20,83 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          child: Container(
+    return BlocConsumer<CubitLayout,StateLayout>(
+      listener: (context,stare){},
+      builder:(context,stare){
+        return Padding(
+          padding: const EdgeInsets.all(20),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Categories',style:getSemiBoldStyle(color: ColorManager.darkGrey,fontSize: FontSize.s20)),
+                SizedBox(height: AppSize.s20,),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: (){
+                          navigateTo(context, AddCategoryScreen());
 
-            child: GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              mainAxisSpacing: AppSize.s1,
-              crossAxisSpacing:AppSize.s1 ,
-              childAspectRatio: 1/1.50,
-              physics: NeverScrollableScrollPhysics(),
-              children: List.generate(CubitLayout.get(context).listAllProduct!.length, (index) {
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(color: ColorManager.lightPrimary)
+                          ),
+                          height: AppSize.s100,
+                          width: AppSize.s100,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(IconBroken.Plus,size: AppSize.s40,),
+                              Text("Add Category")
+
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(width: AppSize.s10,),
+
+                      Container(
+                        height: 100,
+                        child: ListView.separated(
+                            scrollDirection:Axis.horizontal ,
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemBuilder: (context,index)=>buildCategoryItem(context,CubitLayout.get(context).listAllCategory![index]),
+                            separatorBuilder:(context,index)=>SizedBox(width: 10,),
+                            itemCount: CubitLayout.get(context).listAllCategory!.length),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20,),
+                Container(
+
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    mainAxisSpacing: AppSize.s1,
+                    crossAxisSpacing:AppSize.s1 ,
+                    childAspectRatio: 1/1.50,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: List.generate(CubitLayout.get(context).listAllProduct!.length, (index) {
 
 
-                return buildGridProduct(CubitLayout.get(context).listAllProduct![index], context);
-              }),
+                      return buildGridProduct(CubitLayout.get(context).listAllProduct![index], context);
+                    }),
 
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
-      );
+        );
+      } ,
+
+    );
 
 
   }
@@ -64,8 +126,7 @@ class HomeScreen extends StatelessWidget {
 
                       image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: NetworkImage(productsData!.image!
-                          ))
+                          image: NetworkImage('${productsData.image!}'))
                   ),
                 ),
                 if(productsData.old_Price! > 0)
@@ -118,6 +179,35 @@ class HomeScreen extends StatelessWidget {
 
         ),
       ),
+    );
+  }
+  Widget buildCategoryItem(context,CategoryModel categoryModel){
+    return Stack(
+      alignment: AlignmentDirectional.bottomCenter,
+
+      children: [
+        Image(
+            width: 100,
+            height: 100,
+            fit: BoxFit.fill,
+            image: NetworkImage('${categoryModel.image}')
+        ),
+        Container(
+
+            color: Colors.black.withOpacity(.7),
+            width: 100,
+
+
+            child: Text(
+              '${categoryModel.category}',
+              textAlign: TextAlign.center,
+              maxLines: 1,
+
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(color: Colors.white,),
+            )
+        ),
+      ],
     );
   }
 }

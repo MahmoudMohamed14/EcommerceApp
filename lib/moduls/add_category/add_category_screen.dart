@@ -26,9 +26,9 @@ class AddCategoryScreen extends StatelessWidget {
         return Scaffold(
 
 
-          // appBar: AppBar(
-          //   title: Text('AddProduct'),
-          // ),
+          appBar: AppBar(
+            title: Text('AddProduct'),
+          ),
           body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(AppSize.s20),
