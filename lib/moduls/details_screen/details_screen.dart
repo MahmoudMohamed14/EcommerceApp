@@ -1,0 +1,115 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:projectgraduate/models/product_model.dart';
+import 'package:projectgraduate/moduls/layout_screen/layout_cubit/cubit_layout.dart';
+import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
+import 'package:projectgraduate/shared/componant/componant.dart';
+import 'package:projectgraduate/shared/constant/color_manager.dart';
+import 'package:projectgraduate/shared/constant/data_shared.dart';
+import 'package:projectgraduate/shared/constant/fonst_manager.dart';
+import 'package:projectgraduate/shared/constant/icon_broken.dart';
+import 'package:projectgraduate/shared/constant/test_styles_manager.dart';
+import 'package:projectgraduate/shared/constant/values_manager.dart';
+
+class DetailsScreen extends StatelessWidget {
+  ProductModel ?productModel;
+
+  DetailsScreen(this.productModel);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<CubitLayout,StateLayout>(
+      listener: (context,state){},
+      builder:(context,state){
+        var cubit=CubitLayout.get(context);
+        return Scaffold(
+          //appBar: AppBar(title: Text('Details'),),
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Stack(
+                        alignment: AlignmentDirectional.topStart,
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            height: 270,
+
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(AppSize.s10),
+                              image: DecorationImage(image: NetworkImage(productModel!.image!),
+                                fit: BoxFit.fill
+                              )
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsetsDirectional.only(start: AppPadding.p20,top: AppPadding.p50),
+                            child: IconButton(
+                                icon: Icon(IconBroken.Arrow___Left,color: ColorManager.primary,),
+                              onPressed: (){
+                                  Navigator.pop(context);
+                              },
+                            )),
+
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(AppPadding.p20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('${productModel!.name}',style: getBoldStyle(color: ColorManager.darkGrey,fontSize: 26),
+                            ),
+                           const SizedBox(height: AppSize.s20,),
+                            Row(
+
+                              children: [
+                                Text('Price: ',style:getSemiBoldStyle(color: ColorManager.darkGrey,fontSize: FontSize.s20)),
+
+                                Text('${productModel!.price}LE',style:getSemiBoldStyle(color: ColorManager.primary,fontSize: FontSize.s18)),
+                                if(productModel!.old_Price > 0)
+                                Padding(
+                                  padding: const EdgeInsetsDirectional.only(top: 7,start: 5 ),
+                                  child: Text('${productModel!.old_Price}LE',
+                                    style: TextStyle(color: Colors.grey,
+                                        decoration: TextDecoration.lineThrough),),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: AppSize.s20,),
+                            Text('Descriptions',style:getSemiBoldStyle(color: ColorManager.darkGrey,fontSize: FontSize.s20)),
+                            const SizedBox(height: AppSize.s10,),
+                            Text('${productModel!.description}',
+                                style:Theme.of(context).textTheme.subtitle1),
+
+
+
+
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: defaultButton(onPress: (){
+
+                }, name: 'Add To Cart'),
+              )
+
+
+            ],
+          ),
+        );},
+
+
+    );
+  }
+
+}
