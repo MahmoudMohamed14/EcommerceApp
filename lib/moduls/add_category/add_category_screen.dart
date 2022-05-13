@@ -17,6 +17,15 @@ class AddCategoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<CubitLayout,StateLayout>(
       listener: (context ,state){
+        if(state is AddCategorySuccessState){
+          categoryNameController.clear();
+          CubitLayout.get(context).categoryImage=null;
+          CubitLayout.get(context).categoryImageUrl=null;
+          Navigator.pop(context);
+
+
+        }
+
 
       },
       builder: (context ,state){
@@ -34,6 +43,11 @@ class AddCategoryScreen extends StatelessWidget {
               padding: const EdgeInsets.all(AppSize.s20),
               child: Column(
                 children: [
+                  if(state is CategoryImageUploadLoadingState)
+                  Column(children:const [
+                    LinearProgressIndicator(),
+                    SizedBox(height: 20,),
+                  ],),
                   defaultEditText(control: categoryNameController, label: 'name', validat: (s){
                     if(s!.isEmpty){
                       return'${getLang(context, "name_empty")}';
@@ -65,8 +79,10 @@ class AddCategoryScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 20,),
                   defaultButton(onPress: (){
-                    cubit.addCategory(image: cubit.categoryImageUrl,category: categoryNameController.text);
-
+                    if(state is CategoryImageUploadLoadingState){}else {
+                      cubit.addCategory(image: cubit.categoryImageUrl,
+                          category: categoryNameController.text);
+                    }
                   }, name: 'upload')
 
 
