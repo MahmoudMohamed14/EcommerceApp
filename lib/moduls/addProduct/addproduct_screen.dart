@@ -9,6 +9,12 @@ import 'package:projectgraduate/shared/language/applocale.dart';
 import '../layout_screen/layout_cubit/cubit_layout.dart';
 
 class AddProductScreen extends StatelessWidget {
+  String ?categoryName;
+  //declaration for old price controlar
+
+
+
+  AddProductScreen({this.categoryName});
 
   var priceController=TextEditingController();
   var nameController=TextEditingController();
@@ -16,19 +22,31 @@ class AddProductScreen extends StatelessWidget {
   var descriptionController=TextEditingController();
   var categoryController=TextEditingController();
 
+
+
+
   @override
   Widget build(BuildContext context) {
+    old_priceController.text='0.0';
     return BlocConsumer<CubitLayout,StateLayout>(
       listener: (context ,state){
+        if(state is AddProductSuccessState){
+          priceController.clear();
+          nameController.clear();
+          descriptionController.clear();
+          old_priceController.clear();
+          CubitLayout.get(context).productImage=null;
+          CubitLayout.get(context).productImageUrl=null;
+          Navigator.pop(context);
 
+
+        }
       },
       builder: (context ,state){
+   categoryController.text=categoryName??'';
 
-        old_priceController.text=0.0.toString();
         var cubit =CubitLayout.get(context);
         return Scaffold(
-
-
           appBar: AppBar(
             title: Text('AddProduct'),
           ),
@@ -37,6 +55,11 @@ class AddProductScreen extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  if(state is ProductImageUploadLoadingState)
+                    Column(children:const [
+                      LinearProgressIndicator(),
+                      SizedBox(height: 20,),
+                    ],),
                   defaultEditText(control: nameController, label: 'name', validat: (s){
                     if(s!.isEmpty){
                       return'${getLang(context, "name_empty")}';
@@ -63,6 +86,7 @@ class AddProductScreen extends StatelessWidget {
                   SizedBox(height: 20,),
                   defaultEditText(control: old_priceController, label: 'old price', validat: (s){
                     if(s!.isEmpty){
+
                       return'${getLang(context, "name_empty")}';
                     }
                     return null;
@@ -99,15 +123,17 @@ class AddProductScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 20,),
                   defaultButton(onPress: (){
-                    cubit.addProduct(
-                        description: descriptionController.text,
-                        category: categoryController.text,
-                        image: cubit.productImageUrl,
-                        price: priceController.text,
-                        name: nameController.text,
-                        old_price: old_priceController.text
+                    if(state is ProductImageUploadLoadingState){}else {
+                      cubit.addProduct(
+                          description: descriptionController.text,
+                          category: categoryController.text,
+                          image: cubit.productImageUrl,
+                          price: priceController.text,
+                          name: nameController.text,
+                          old_price: old_priceController.text
 
-                    );
+                      );
+                    }
                   }, name: 'upload')
 
 

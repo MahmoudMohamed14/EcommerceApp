@@ -27,7 +27,7 @@ class CubitLayout extends Cubit<StateLayout> {
     return BlocProvider.of(context);
   }
   List<String>listTitle=['Category','Product','Card'];
-  List<Widget>listWidget=[CategoriesScreen (),HomeScreen(),HomeScreen()];
+  List<Widget>listWidget=[HomeScreen(),HomeScreen(),HomeScreen()];
 
   int index = 1;
   void  changeBottomNav({required int index})
@@ -100,6 +100,7 @@ class CubitLayout extends Cubit<StateLayout> {
        update({'id':value.id}).
        then((value) {
          emit(AddProductSuccessState());
+         getProducts();
 
        }).catchError((onError){
 
@@ -215,6 +216,15 @@ class CubitLayout extends Cubit<StateLayout> {
 
     });
 
+  }
+  List<ProductModel> getCategoryList({String ?categoryName}) {
+    List<ProductModel> categoryList=[];
+    listAllProduct!.forEach((element) {
+      if(element.category==categoryName){
+        categoryList.add(element);
+      }
+    });
+    return categoryList;
   }
 
 }

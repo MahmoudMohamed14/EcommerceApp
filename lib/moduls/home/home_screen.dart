@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:projectgraduate/models/category_model.dart';
 import 'package:projectgraduate/moduls/add_category/add_category_screen.dart';
+import 'package:projectgraduate/moduls/category_screen/category_screen.dart';
 import 'package:projectgraduate/moduls/details_screen/details_screen.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/cubit_layout.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
 import 'package:projectgraduate/shared/componant/componant.dart';
+import 'package:projectgraduate/shared/constant/data_shared.dart';
 import 'package:projectgraduate/shared/constant/fonst_manager.dart';
 import 'package:projectgraduate/shared/constant/icon_broken.dart';
 import 'package:projectgraduate/shared/constant/test_styles_manager.dart';
@@ -23,6 +25,7 @@ class HomeScreen extends StatelessWidget {
     return BlocConsumer<CubitLayout,StateLayout>(
       listener: (context,stare){},
       builder:(context,stare){
+        var cubit=CubitLayout.get(context);
         return Padding(
           padding: const EdgeInsets.all(20),
           child: SingleChildScrollView(
@@ -35,6 +38,7 @@ class HomeScreen extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
+                      if(myData!.isAdmin!)
                       InkWell(
                         onTap: (){
                           navigateTo(context, AddCategoryScreen());
@@ -73,23 +77,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 20,),
-                Container(
-
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    shrinkWrap: true,
-                    mainAxisSpacing: AppSize.s1,
-                    crossAxisSpacing:AppSize.s1 ,
-                    childAspectRatio: 1/1.50,
-                    physics: NeverScrollableScrollPhysics(),
-                    children: List.generate(CubitLayout.get(context).listAllProduct!.length, (index) {
-
-
-                      return buildGridProduct(CubitLayout.get(context).listAllProduct![index], context);
-                    }),
-
-                  ),
-                ),
+                buildGridProduct(cubit.listAllProduct!,context),
               ],
             ),
           ),
@@ -100,7 +88,7 @@ class HomeScreen extends StatelessWidget {
 
 
   }
-   Widget buildGridProduct(ProductModel productsData,context){
+  static Widget buildProductItem(ProductModel productsData,context){
     return InkWell(
       onTap: (){
         navigateTo(context, DetailsScreen (productsData));
@@ -181,33 +169,58 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+ static Widget buildGridProduct(List list,context){
+    return  Container(
+
+      child: GridView.count(
+        crossAxisCount: 2,
+        shrinkWrap: true,
+        mainAxisSpacing: AppSize.s1,
+        crossAxisSpacing:AppSize.s1 ,
+        childAspectRatio: 1/1.50,
+        physics: NeverScrollableScrollPhysics(),
+        children: List.generate(list.length, (index) {
+
+
+          return buildProductItem(list[index], context);
+        }),
+
+      ),
+    );
+
+  }
   Widget buildCategoryItem(context,CategoryModel categoryModel){
-    return Stack(
-      alignment: AlignmentDirectional.bottomCenter,
+    return InkWell(
+      onTap: (){
+        navigateTo(context, CategoriesScreen(title: categoryModel.category,listCategory:CubitLayout.get(context).getCategoryList(categoryName: categoryModel.category) ,));
+      },
+      child: Stack(
+        alignment: AlignmentDirectional.bottomCenter,
 
-      children: [
-        Image(
-            width: 100,
-            height: 100,
-            fit: BoxFit.fill,
-            image: NetworkImage('${categoryModel.image}')
-        ),
-        Container(
+        children: [
+          Image(
+              width: 100,
+              height: 100,
+              fit: BoxFit.fill,
+              image: NetworkImage('${categoryModel.image}')
+          ),
+          Container(
 
-            color: Colors.black.withOpacity(.7),
-            width: 100,
+              color: Colors.black.withOpacity(.7),
+              width: 100,
 
 
-            child: Text(
-              '${categoryModel.category}',
-              textAlign: TextAlign.center,
-              maxLines: 1,
+              child: Text(
+                '${categoryModel.category}',
+                textAlign: TextAlign.center,
+                maxLines: 1,
 
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: Colors.white,),
-            )
-        ),
-      ],
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: Colors.white,),
+              )
+          ),
+        ],
+      ),
     );
   }
 }

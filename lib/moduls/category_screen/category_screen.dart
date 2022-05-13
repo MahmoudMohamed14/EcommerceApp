@@ -1,22 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:projectgraduate/models/category_model.dart';
+import 'package:projectgraduate/models/product_model.dart';
+import 'package:projectgraduate/moduls/addProduct/addproduct_screen.dart';
+import 'package:projectgraduate/moduls/home/home_screen.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/cubit_layout.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
+import 'package:projectgraduate/shared/componant/componant.dart';
+import 'package:projectgraduate/shared/constant/data_shared.dart';
+import 'package:projectgraduate/shared/constant/icon_broken.dart';
 
 class CategoriesScreen extends StatelessWidget {
+  List<ProductModel>? listCategory;
+  String? title;
+
+
+  CategoriesScreen({this.listCategory, this.title});
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CubitLayout,StateLayout>(
-      listener: (context,state){},
+      listener: (context,state){
+
+      },
       builder:(context,state){
         var cubit=CubitLayout.get(context);
-        return ListView.separated(
-            scrollDirection:Axis.vertical ,
-            physics: BouncingScrollPhysics(),
-            itemBuilder: (context,index)=>buildCategory(context,cubit.listAllCategory![index]),
-            separatorBuilder:(context,index)=>SizedBox(width: 10,),
-            itemCount: cubit.listAllCategory!.length);},
+        return Scaffold(
+          floatingActionButton: myData!.isAdmin!?FloatingActionButton(
+            onPressed: (){
+              navigateTo(context, AddProductScreen(categoryName:title ,));
+            },
+            child:Icon(IconBroken.Plus) ,
+          ):null,
+        appBar: AppBar(title: Text(title!,),),
+          body: Padding(
+            padding: const EdgeInsets.all(20),
+            child: HomeScreen.buildGridProduct(listCategory!, context),
+          ),
+        );},
 
 
     );
