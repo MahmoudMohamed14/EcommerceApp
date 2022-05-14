@@ -1,6 +1,6 @@
 
 import 'dart:io';
-import 'dart:math';
+
 
 
 
@@ -13,8 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:projectgraduate/models/category_model.dart';
 import 'package:projectgraduate/models/product_model.dart';
 import 'package:projectgraduate/models/user_model.dart';
-import 'package:projectgraduate/moduls/add_category/add_category_screen.dart';
-import 'package:projectgraduate/moduls/category_screen/category_screen.dart';
+
 import 'package:projectgraduate/moduls/home/home_screen.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
 import 'package:projectgraduate/shared/constant/data_shared.dart';
@@ -36,6 +35,12 @@ class CubitLayout extends Cubit<StateLayout> {
     this. index = index;
 
     emit( ChangeBottomNavState());
+  }
+  void init(){
+    getUserData();
+    getCategory();
+    getProducts();
+    changeBottomNav(index: 1);
   }
   File? productImage;
 
@@ -112,7 +117,7 @@ class CubitLayout extends Cubit<StateLayout> {
   List<ProductModel>?listAllProduct;
   void getProducts(){
     listAllProduct=[];
-    emit(GetProductSuccessState());
+    emit(GetProductLoadingState());
     FirebaseFirestore
         .instance.
     collection('Products')
@@ -121,8 +126,9 @@ class CubitLayout extends Cubit<StateLayout> {
           value.docs.forEach((element) {
             print(element.data()['old_Price']);
             listAllProduct!.add(ProductModel.fromJson(element.data()));
-            emit(GetProductSuccessState());
+
           });
+          emit(GetProductSuccessState());
 
     }).catchError((onError){
       emit(GetProductErrorState());
@@ -205,15 +211,18 @@ class CubitLayout extends Cubit<StateLayout> {
       emit(GetCategoryErrorState());
     });
   }
+  UsersModel? myData;
   void getUserData(){
     FirebaseFirestore.instance
         .collection('users')
         .doc(uId).get().then((value) {
           myData=UsersModel.fromJson(json: value.data()!);
+          emit(GetUserDataSuccessState());
+
           print(value.data()!['name']);
 
     }).catchError((onError){
-
+      emit(GetUserDataErrorState());
     });
 
   }

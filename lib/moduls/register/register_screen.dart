@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:projectgraduate/moduls/layout_screen/layout_cubit/cubit_layout.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_screan.dart';
 import 'package:projectgraduate/moduls/register/cubit/register_cubit.dart';
 import 'package:projectgraduate/moduls/register/cubit/register_states.dart';
@@ -11,7 +12,7 @@ import '../../shared/componant/componant.dart';
 import '../../shared/constant/color_manager.dart';
 import '../../shared/constant/test_styles_manager.dart';
 import '../../shared/language/applocale.dart';
-import '../home/home_screen.dart';
+
 
 
 
@@ -37,9 +38,9 @@ class Register extends StatelessWidget {
       create: (context)=>RegisterCubit(),
       child: BlocConsumer<RegisterCubit,RegisterStates>(
           listener: (context,state){
-            if(state is CreateUserSuccessState||state is PostClassNameSuccessState){
+            if(state is CreateUserSuccessState){
                navigateAndFinish(context, LayoutScreen());
-              // CubitApp.get(context).init();
+               CubitLayout.get(context).init();;
               showToast(text: 'Create Successful', state: ToastState.SUCCESS);
 
             }  if (state is CreateUserErrorState)
@@ -49,9 +50,6 @@ class Register extends StatelessWidget {
               showToast(text:state.error! , state: ToastState.ERROR);
             }
             if (state is RegisterErrorState)
-            {
-              showToast(text:state.error! , state: ToastState.ERROR);
-            }if (state is PostClassNameErrorState)
             {
               showToast(text:state.error! , state: ToastState.ERROR);
             }

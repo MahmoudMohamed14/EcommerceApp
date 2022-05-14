@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:projectgraduate/models/user_model.dart';
 import 'package:projectgraduate/moduls/register/cubit/register_states.dart';
+import 'package:projectgraduate/shared/constant/data_shared.dart';
+import 'package:projectgraduate/shared/network/local/cache_helper.dart';
 
 class RegisterCubit extends Cubit<RegisterStates> {
   RegisterCubit() : super(RegisterInitState());
@@ -47,8 +49,8 @@ class RegisterCubit extends Cubit<RegisterStates> {
 
       );
       // if(CacheHelper.getData(key: 'email')==null)myEmail=email;
-      // CacheHelper.putData(key: 'email', value: email);
-      // uId=value.user!.uid;
+       CacheHelper.putData(key: 'uId', value: value.user!.uid);
+       uId=value.user!.uid;
       createUser(usersModel: usersModel,);
 
 

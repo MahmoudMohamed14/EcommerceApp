@@ -7,7 +7,7 @@ import 'package:projectgraduate/moduls/home/home_screen.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/cubit_layout.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
 import 'package:projectgraduate/shared/componant/componant.dart';
-import 'package:projectgraduate/shared/constant/data_shared.dart';
+
 import 'package:projectgraduate/shared/constant/icon_broken.dart';
 
 class CategoriesScreen extends StatelessWidget {
@@ -26,7 +26,7 @@ class CategoriesScreen extends StatelessWidget {
       builder:(context,state){
         var cubit=CubitLayout.get(context);
         return Scaffold(
-          floatingActionButton: myData!.isAdmin!?FloatingActionButton(
+          floatingActionButton: cubit.myData!.isAdmin!?FloatingActionButton(
             onPressed: (){
               navigateTo(context, AddProductScreen(categoryName:title ,));
             },

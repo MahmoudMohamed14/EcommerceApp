@@ -1,3 +1,4 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +9,7 @@ import 'package:projectgraduate/moduls/details_screen/details_screen.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/cubit_layout.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
 import 'package:projectgraduate/shared/componant/componant.dart';
-import 'package:projectgraduate/shared/constant/data_shared.dart';
+
 import 'package:projectgraduate/shared/constant/fonst_manager.dart';
 import 'package:projectgraduate/shared/constant/icon_broken.dart';
 import 'package:projectgraduate/shared/constant/test_styles_manager.dart';
@@ -38,28 +39,54 @@ class HomeScreen extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      if(myData!.isAdmin!)
-                      InkWell(
-                        onTap: (){
-                          navigateTo(context, AddCategoryScreen());
+                   ConditionalBuilder(
+                     condition: cubit.myData !=null&&cubit.myData!.isAdmin!,
+                     builder: (context)=>InkWell(
+                       onTap: (){
+                         navigateTo(context, AddCategoryScreen());
 
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(color: ColorManager.lightPrimary)
-                          ),
-                          height: AppSize.s100,
-                          width: AppSize.s100,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(IconBroken.Plus,size: AppSize.s40,),
-                              Text("Add Category")
+                       },
+                       child: Container(
+                         decoration: BoxDecoration(
+                             border: Border.all(color: ColorManager.lightPrimary)
+                         ),
+                         height: AppSize.s100,
+                         width: AppSize.s100,
+                         child: Column(
+                           mainAxisAlignment: MainAxisAlignment.center,
+                           children: [
+                             Icon(IconBroken.Plus,size: AppSize.s40,),
+                             Text("Add Category")
 
-                            ],
-                          ),
-                        ),
-                      ),
+                           ],
+                         ),
+                       ),
+                     ),
+                     fallback: ((context)=>SizedBox()),
+
+
+                   ),
+                      // InkWell(
+                      //   onTap: (){
+                      //     navigateTo(context, AddCategoryScreen());
+                      //
+                      //   },
+                      //   child: Container(
+                      //     decoration: BoxDecoration(
+                      //         border: Border.all(color: ColorManager.lightPrimary)
+                      //     ),
+                      //     height: AppSize.s100,
+                      //     width: AppSize.s100,
+                      //     child: Column(
+                      //       mainAxisAlignment: MainAxisAlignment.center,
+                      //       children: [
+                      //         Icon(IconBroken.Plus,size: AppSize.s40,),
+                      //         Text("Add Category")
+                      //
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
 
                       SizedBox(width: AppSize.s10,),
 
@@ -194,32 +221,46 @@ class HomeScreen extends StatelessWidget {
       onTap: (){
         navigateTo(context, CategoriesScreen(title: categoryModel.category,listCategory:CubitLayout.get(context).getCategoryList(categoryName: categoryModel.category) ,));
       },
-      child: Stack(
-        alignment: AlignmentDirectional.bottomCenter,
+      child: Container(
+        decoration:BoxDecoration(
+            borderRadius: BorderRadius.circular(20),) ,
+        child: Stack(
+          alignment: AlignmentDirectional.bottomCenter,
 
-        children: [
-          Image(
+          children: [
+            Container(
               width: 100,
               height: 100,
-              fit: BoxFit.fill,
-              image: NetworkImage('${categoryModel.image}')
-          ),
-          Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                image: DecorationImage(image: NetworkImage('${categoryModel.image}'),
 
-              color: Colors.black.withOpacity(.7),
-              width: 100,
+                  fit: BoxFit.cover,
+                )
+              ),
+
+            ),
+
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(.7),
+                  borderRadius: BorderRadius.vertical(bottom:Radius.circular(20) )
+              ),
 
 
-              child: Text(
-                '${categoryModel.category}',
-                textAlign: TextAlign.center,
-                maxLines: 1,
+                width: 100,
 
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: Colors.white,),
-              )
-          ),
-        ],
+                child: Text(
+                  '${categoryModel.category}',
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: Colors.white,),
+                )
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,10 +1,13 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:projectgraduate/moduls/layout_screen/layout_cubit/cubit_layout.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_screan.dart';
 import 'package:projectgraduate/moduls/login/cubit/login_cubit.dart';
 import 'package:projectgraduate/moduls/login/cubit/login_state.dart';
 import 'package:projectgraduate/moduls/register/register_screen.dart';
 import 'package:projectgraduate/shared/componant/componant.dart';
+
 import 'package:projectgraduate/shared/constant/icon_broken.dart';
 import 'package:projectgraduate/shared/language/applocale.dart';
 
@@ -29,6 +32,8 @@ class LoginScreen extends StatelessWidget {
         child: BlocConsumer<LoginCubit,LoginState>(
           listener: (context,state){
             if(state is LoginSuccessState){
+
+              CubitLayout.get(context).init();
 
                navigateAndFinish(context, LayoutScreen());
               // CubitApp.get(context).init();

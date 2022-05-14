@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:projectgraduate/shared/network/local/cache_helper.dart';
 
 import '../constant/color_manager.dart';
 import '../constant/test_styles_manager.dart';
@@ -171,7 +172,7 @@ void signOut( context,widget) {
 
 
   FirebaseAuth.instance.signOut().then((value) {
-   // CacheHelper.removeWithKey(key: 'email');
+   CacheHelper.removeWithKey(key: 'uId');
     navigateAndFinish(context, widget);
   });
 

@@ -25,3 +25,5 @@ class AddCategoryLoadingState extends StateLayout{}
 class GetCategoryErrorState extends StateLayout{}
 class GetCategorySuccessState extends StateLayout{}
 class GetCategoryLoadingState extends StateLayout{}
+class GetUserDataErrorState extends StateLayout{}
+class GetUserDataSuccessState extends StateLayout{}

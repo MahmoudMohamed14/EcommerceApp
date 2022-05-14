@@ -13,9 +13,15 @@ import 'moduls/login/login_screen.dart';
 import 'shared/componant/componant.dart';
 import 'shared/constant/theme_manager.dart';
 import 'shared/language/applocale.dart';
+import 'shared/network/local/cache_helper.dart';
 
 void main()async {
   WidgetsFlutterBinding.ensureInitialized();
+  await CacheHelper.init();
+
+  if(CacheHelper.getData(key: 'uId')!=null){
+    uId=CacheHelper.getData(key: 'uId');
+  }
   await Firebase.initializeApp(
     // options:  FirebaseOptions(
     //   apiKey: 'AIzaSyAsNOLf5LmI1qFybvPaHFT7LEFFdPnbYMk',
@@ -23,8 +29,8 @@ void main()async {
     //   messagingSenderId: '766788020496',
     //   projectId: 'projectgraduate-ba744',
     // ),
-  );
-  uId=FirebaseAuth.instance.currentUser!.uid;
+    );
+
   BlocOverrides.runZoned(
         () {
       runApp(
