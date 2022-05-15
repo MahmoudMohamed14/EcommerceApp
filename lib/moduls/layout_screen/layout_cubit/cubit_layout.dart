@@ -1,8 +1,6 @@
 
 import 'dart:io';
-
-
-
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -10,9 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:projectgraduate/models/cart_model.dart';
 import 'package:projectgraduate/models/category_model.dart';
 import 'package:projectgraduate/models/product_model.dart';
 import 'package:projectgraduate/models/user_model.dart';
+import 'package:projectgraduate/moduls/cart/cart_screen.dart';
 
 import 'package:projectgraduate/moduls/home/home_screen.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
@@ -26,7 +26,7 @@ class CubitLayout extends Cubit<StateLayout> {
     return BlocProvider.of(context);
   }
   List<String>listTitle=['Category','Product','Card'];
-  List<Widget>listWidget=[HomeScreen(),HomeScreen(),HomeScreen()];
+  List<Widget>listWidget=[HomeScreen(),HomeScreen(),CartScreen()];
 
   int index = 1;
   void  changeBottomNav({required int index})
@@ -149,6 +149,7 @@ class CubitLayout extends Cubit<StateLayout> {
     }
 
   }
+
   String?categoryImageUrl;
   uploadCategoryImage()async{
     emit(CategoryImageUploadLoadingState());
@@ -226,6 +227,7 @@ class CubitLayout extends Cubit<StateLayout> {
     });
 
   }
+
   List<ProductModel> getCategoryList({String ?categoryName}) {
     List<ProductModel> categoryList=[];
     listAllProduct!.forEach((element) {
@@ -234,6 +236,53 @@ class CubitLayout extends Cubit<StateLayout> {
       }
     });
     return categoryList;
+  }
+  List<CartModel> listCartModel=[];
+  List<Map<String,dynamic>>list=[];
+  String cartId='';
+
+  void addToCart(CartModel cartModel){
+
+    list .add(cartModel.toMap());
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId!).collection('cart').doc("mycart").set({'cart':list}).then((value) {
+
+          getToCart();
+         emit( AddCartSuccessState());
+
+
+    }).catchError((onError){
+      print(onError.toString());
+      emit( AddCartErrorState());
+    });
+
+  }
+  void getToCart(){
+
+   List listt=[];
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId!).collection('cart').doc('mycart').get().then((value) {
+      listt=value.data()!['cart'];
+          listt.forEach((element) {
+            listCartModel.add(CartModel.fromJson(element));
+
+
+          });
+          print(listt);
+
+
+          emit( GetCartSuccessState());
+
+
+    }).catchError((onError){
+      print(onError.toString());
+
+      emit( GetCartErrorState());
+
+    });
+
   }
 
 }

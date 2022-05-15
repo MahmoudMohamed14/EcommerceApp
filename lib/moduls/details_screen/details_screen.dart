@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:projectgraduate/models/cart_model.dart';
 import 'package:projectgraduate/models/product_model.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/cubit_layout.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
@@ -99,6 +100,12 @@ class DetailsScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: defaultButton(onPress: (){
+                  cubit.addToCart(CartModel(image: productModel!.image,
+                      name:  productModel!.name,
+                    price:  productModel!.price,
+                    id:  productModel!.id
+                  ));
+                  // cubit.getToCart();
 
                 }, name: 'Add To Cart'),
               )

@@ -27,3 +27,9 @@ class GetCategorySuccessState extends StateLayout{}
 class GetCategoryLoadingState extends StateLayout{}
 class GetUserDataErrorState extends StateLayout{}
 class GetUserDataSuccessState extends StateLayout{}
+class GetCartLoadingState extends StateLayout{}
+class GetCartErrorState extends StateLayout{}
+class GetCartSuccessState extends StateLayout{}
+class AddCartLoadingState extends StateLayout{}
+class AddCartErrorState extends StateLayout{}
+class AddCartSuccessState extends StateLayout{}

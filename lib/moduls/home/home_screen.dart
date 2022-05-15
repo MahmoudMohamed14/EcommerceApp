@@ -34,7 +34,7 @@ class HomeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Categories',style:getSemiBoldStyle(color: ColorManager.darkGrey,fontSize: FontSize.s20)),
-                SizedBox(height: AppSize.s20,),
+              const  SizedBox(height: AppSize.s20,),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -102,8 +102,12 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
+
                 ),
-                SizedBox(height: 20,),
+                const  SizedBox(height: AppSize.s20,),
+                Text('Products',style:getSemiBoldStyle(color: ColorManager.darkGrey,fontSize: FontSize.s20)),
+              const  SizedBox(height: AppSize.s20,),
+
                 buildGridProduct(cubit.listAllProduct!,context),
               ],
             ),
@@ -163,7 +167,7 @@ class HomeScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text('${productsData.price}',maxLines: 2,overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.blue)),
+                      Text('${productsData.price}',maxLines: 2,overflow: TextOverflow.ellipsis,style: TextStyle(color: ColorManager.primary)),
                       SizedBox(width: 20,),
                       if(productsData.old_Price!>0)
                         Text('${productsData.old_Price}',
