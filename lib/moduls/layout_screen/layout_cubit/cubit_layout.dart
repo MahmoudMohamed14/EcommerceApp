@@ -240,13 +240,15 @@ class CubitLayout extends Cubit<StateLayout> {
   List<CartModel> listCartModel=[];
   List<Map<String,dynamic>>list=[];
   String cartId='';
+  int counteraddToCart=0;
+  double totalOfCart=0;
 
   void addToCart(CartModel cartModel){
 
-    list .add(cartModel.toMap());
     FirebaseFirestore.instance
         .collection('users')
-        .doc(uId!).collection('cart').doc("mycart").set({'cart':list}).then((value) {
+        .doc(uId!).collection('cart').doc("mycart").update(
+      {'cart': FieldValue.arrayUnion([cartModel.toMap()])},).then((value) {
 
           getToCart();
          emit( AddCartSuccessState());
@@ -261,19 +263,30 @@ class CubitLayout extends Cubit<StateLayout> {
   void getToCart(){
 
    List listt=[];
+   listCartModel=[];
     FirebaseFirestore.instance
         .collection('users')
         .doc(uId!).collection('cart').doc('mycart').get().then((value) {
-      listt=value.data()!['cart'];
-          listt.forEach((element) {
-            listCartModel.add(CartModel.fromJson(element));
+          if(value.data()==null){
+            FirebaseFirestore.instance
+                .collection('users')
+                .doc(uId!).collection('cart').doc("mycart").set({'cart':[]});
 
 
-          });
-          print(listt);
+          }else{
+            listt=value.data()!['cart'];
+            listt.forEach((element) {
+              listCartModel.add(CartModel.fromJson(element));
 
 
-          emit( GetCartSuccessState());
+            });
+            print(listt);
+
+
+            emit( GetCartSuccessState());
+
+          }
+
 
 
     }).catchError((onError){
@@ -282,6 +295,52 @@ class CubitLayout extends Cubit<StateLayout> {
       emit( GetCartErrorState());
 
     });
+
+  }
+
+  void deleteItemfromCart(CartModel cartModel){
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId!).collection('cart').doc("mycart").update(
+        {'cart': FieldValue.arrayRemove([cartModel.toMap()])},).then((value) {
+          getToCart();
+     emit( DeleteItemCartSuccessState());
+
+    }).catchError((onError){
+      emit( DeleteItemCartErrorState());
+    });
+  }
+  void updateToCart(CartModel cartModel,int index){
+    listCartModel[index]=cartModel;
+    listCartModel.forEach((element) {
+      list .add(element.toMap());
+
+    });
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId!).collection('cart').doc("mycart").update({'cart':list}).then((value) {
+         list=[];
+      getToCart();
+      emit( UpdateItemCartSuccessState());
+
+
+    }).catchError((onError){
+      print(onError.toString());
+      emit(  UpdateItemCartErrorState());
+    });
+
+  }
+  double calculateTotalChecke(){
+    totalOfCart=0;
+    if(listCartModel.length>0){
+      listCartModel.forEach((element) {
+
+        totalOfCart+=(element.price   * element.quantity);
+
+      });
+    }
+    return totalOfCart ;
 
   }
 

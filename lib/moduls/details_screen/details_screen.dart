@@ -6,7 +6,6 @@ import 'package:projectgraduate/moduls/layout_screen/layout_cubit/cubit_layout.d
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
 import 'package:projectgraduate/shared/componant/componant.dart';
 import 'package:projectgraduate/shared/constant/color_manager.dart';
-import 'package:projectgraduate/shared/constant/data_shared.dart';
 import 'package:projectgraduate/shared/constant/fonst_manager.dart';
 import 'package:projectgraduate/shared/constant/icon_broken.dart';
 import 'package:projectgraduate/shared/constant/test_styles_manager.dart';
@@ -100,11 +99,32 @@ class DetailsScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: defaultButton(onPress: (){
+                 cubit.counteraddToCart=0;
+                  if(cubit.listCartModel.length>0){
+                    CubitLayout.get(context).listCartModel.forEach ((element) {
+                      if(element.id == productModel!.id){
+                       cubit. counteraddToCart=1;
+
+                      }
+
+                    });
+
+
+                    if(cubit.counteraddToCart==0){
+                      cubit.addToCart(CartModel(image: productModel!.image,
+                          name:  productModel!.name,
+                          price:  productModel!.price,
+                          id:  productModel!.id
+                      ));
+                    }
+
+                  }else
+                  {
                   cubit.addToCart(CartModel(image: productModel!.image,
                       name:  productModel!.name,
                     price:  productModel!.price,
                     id:  productModel!.id
-                  ));
+                  ));}
                   // cubit.getToCart();
 
                 }, name: 'Add To Cart'),
@@ -118,5 +138,6 @@ class DetailsScreen extends StatelessWidget {
 
     );
   }
+
 
 }
