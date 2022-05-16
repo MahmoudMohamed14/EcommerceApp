@@ -1,8 +1,7 @@
 class CartModel{
 
-  dynamic? price;
-  dynamic? quantity;
-
+  dynamic price;
+  dynamic quantity;
   String?id;
   String ?name;
   String ?image;

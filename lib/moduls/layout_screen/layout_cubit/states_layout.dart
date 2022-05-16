@@ -33,3 +33,7 @@ class GetCartSuccessState extends StateLayout{}
 class AddCartLoadingState extends StateLayout{}
 class AddCartErrorState extends StateLayout{}
 class AddCartSuccessState extends StateLayout{}
+class DeleteItemCartErrorState extends StateLayout{}
+class DeleteItemCartSuccessState extends StateLayout{}
+class UpdateItemCartErrorState extends StateLayout{}
+class UpdateItemCartSuccessState extends StateLayout{}
