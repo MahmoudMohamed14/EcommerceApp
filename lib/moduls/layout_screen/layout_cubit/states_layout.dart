@@ -8,10 +8,15 @@ class ProductImageUploadSuccessState extends StateLayout{}
 class ProductImageUploadErrorState extends StateLayout{}
 class AddProductSuccessState extends StateLayout{}
 class AddProductErrorState extends StateLayout{}
+class EditProductSuccessState extends StateLayout{}
+class EditProductErrorState extends StateLayout{}
+class EditProductLoadingState extends StateLayout{}
 class DownloadProductErrorState extends StateLayout{}
 class AddProductLoadingState extends StateLayout{}
 class GetProductErrorState extends StateLayout{}
 class GetProductSuccessState extends StateLayout{}
+class DeleteProductErrorState extends StateLayout{}
+class DeleteProductSuccessState extends StateLayout{}
 class GetProductLoadingState extends StateLayout{}
 class CategoryImagePickerSuccessState extends StateLayout{}
 class CategoryImagePickerErrorState extends StateLayout{}
@@ -37,3 +42,4 @@ class DeleteItemCartErrorState extends StateLayout{}
 class DeleteItemCartSuccessState extends StateLayout{}
 class UpdateItemCartErrorState extends StateLayout{}
 class UpdateItemCartSuccessState extends StateLayout{}
+class EmitToRebuildState extends StateLayout{}
