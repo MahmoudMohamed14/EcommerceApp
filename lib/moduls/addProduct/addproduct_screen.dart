@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:projectgraduate/models/product_model.dart';
+
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
 import 'package:projectgraduate/shared/componant/componant.dart';
 import 'package:projectgraduate/shared/constant/icon_broken.dart';
@@ -10,11 +12,13 @@ import '../layout_screen/layout_cubit/cubit_layout.dart';
 
 class AddProductScreen extends StatelessWidget {
   String ?categoryName;
+  bool ?isEdit;
+  ProductModel? productModel;
   //declaration for old price controlar
 
 
 
-  AddProductScreen({this.categoryName});
+  AddProductScreen({this.categoryName,this.isEdit=false,this.productModel});
 
   var priceController=TextEditingController();
   var nameController=TextEditingController();
@@ -27,22 +31,36 @@ class AddProductScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    old_priceController.text='0.0';
+
+    if(isEdit!){
+      priceController.text=productModel!.price.toString();
+      nameController.text=productModel!.name!;
+      categoryController.text=productModel!.category!;
+      old_priceController.text=productModel!.old_Price!.toString();
+      descriptionController.text=productModel!.description!;
+      CubitLayout.get(context).productImageUrl=productModel!.image;
+
+    }else{
+      old_priceController.text='0.0';
+    }
     return BlocConsumer<CubitLayout,StateLayout>(
       listener: (context ,state){
-        if(state is AddProductSuccessState){
+
+        if(state is AddProductSuccessState||state is EditProductSuccessState){
           priceController.clear();
           nameController.clear();
           descriptionController.clear();
           old_priceController.clear();
           CubitLayout.get(context).productImage=null;
           CubitLayout.get(context).productImageUrl=null;
+
           Navigator.pop(context);
 
 
         }
       },
       builder: (context ,state){
+        if(! isEdit!)
    categoryController.text=categoryName??'';
 
         var cubit =CubitLayout.get(context);
@@ -117,14 +135,26 @@ class AddProductScreen extends StatelessWidget {
                         borderRadius: BorderRadius.all(Radius.circular(10)),
 
                       ),
-                      child:cubit.productImage == null? Icon(Icons.image,size: 100,):cubit.productImageUrl == null?Icon(IconBroken.Paper_Fail,size: AppSize.s18): Image(image: NetworkImage(cubit.productImageUrl!)),
+                      child:isEdit!?(cubit.productImageUrl == null?Icon(IconBroken.Paper_Fail,size: AppSize.s18): Image(image: NetworkImage(cubit.productImageUrl!))):(cubit.productImage == null? Icon(Icons.image,size: 100,):cubit.productImageUrl == null?Icon(IconBroken.Paper_Fail,size: AppSize.s18): Image(image: NetworkImage(cubit.productImageUrl!))),
 
                     ),
                   ),
                   SizedBox(height: 20,),
                   defaultButton(onPress: (){
-                    if(state is ProductImageUploadLoadingState){}else {
-                      cubit.addProduct(
+                    if(state is ProductImageUploadLoadingState||state is EditProductLoadingState){}else {
+                    if(isEdit!){
+                      cubit.editProduct(
+                          description: descriptionController.text,
+                          category: categoryController.text,
+                          image: cubit.productImageUrl,
+                          price: priceController.text,
+                          name: nameController.text,
+                          id: productModel!.id,
+                          old_price: old_priceController.text
+
+                      );
+
+                    }else{  cubit.addProduct(
                           description: descriptionController.text,
                           category: categoryController.text,
                           image: cubit.productImageUrl,
@@ -132,9 +162,9 @@ class AddProductScreen extends StatelessWidget {
                           name: nameController.text,
                           old_price: old_priceController.text
 
-                      );
+                      );}
                     }
-                  }, name: 'upload')
+                  }, name:isEdit!? 'Edit':'Add')
 
 
                 ],

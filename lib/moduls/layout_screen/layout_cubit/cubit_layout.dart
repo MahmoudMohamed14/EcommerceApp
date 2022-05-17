@@ -1,6 +1,6 @@
 
 import 'dart:io';
-import 'dart:math';
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -13,6 +13,7 @@ import 'package:projectgraduate/models/category_model.dart';
 import 'package:projectgraduate/models/product_model.dart';
 import 'package:projectgraduate/models/user_model.dart';
 import 'package:projectgraduate/moduls/cart/cart_screen.dart';
+import 'package:projectgraduate/moduls/details_screen/details_screen.dart';
 
 import 'package:projectgraduate/moduls/home/home_screen.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
@@ -83,6 +84,7 @@ class CubitLayout extends Cubit<StateLayout> {
         String? old_price,
         String?description,
         String ?image
+
         , String ?category}){
   emit(AddProductLoadingState());
      ProductModel  productModel=ProductModel(
@@ -115,6 +117,42 @@ class CubitLayout extends Cubit<StateLayout> {
            emit(AddProductErrorState());
      });
   }
+
+  void editProduct(
+      {String? name,
+        String? price,
+        String? old_price,
+        String?description,
+        String ?image,
+        String?id
+
+        , String ?category}){
+    emit(EditProductLoadingState());
+    ProductModel  productModel=ProductModel(
+      name: name,
+      id: id,
+      price: double.parse(price!)
+      ,old_Price:double.parse(old_price!),
+      image: image,
+      category: category,
+      description: description ,
+    );
+
+    FirebaseFirestore
+        .instance.
+    collection('Products')
+        .doc(id).update(productModel.toMap()).then((value) {
+
+      getProducts();
+      DetailsScreen(productModel);
+        emit(EditProductSuccessState());
+
+
+
+    }).catchError((onError){
+      emit(EditProductErrorState());
+    });
+  }
   List<ProductModel>?listAllProduct;
   void getProducts(){
     listAllProduct=[];
@@ -133,6 +171,23 @@ class CubitLayout extends Cubit<StateLayout> {
 
     }).catchError((onError){
       emit(GetProductErrorState());
+    });
+  }
+  void deleteProduct({required String productId }){
+
+
+    FirebaseFirestore
+        .instance.
+    collection('Products')
+        .doc(productId)
+       .delete()
+        .then((value) {
+          getProducts();
+
+      emit(DeleteProductSuccessState());
+
+    }).catchError((onError){
+      emit(DeleteProductErrorState());
     });
   }
   File? categoryImage;
@@ -343,6 +398,9 @@ class CubitLayout extends Cubit<StateLayout> {
     }
     return totalOfCart ;
 
+  }
+  void emitFunction() {
+    emit(EmitToRebuildState());
   }
 
 }
