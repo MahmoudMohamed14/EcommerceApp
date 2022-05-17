@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:projectgraduate/models/product_model.dart';
 
+
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
 import 'package:projectgraduate/shared/componant/componant.dart';
 import 'package:projectgraduate/shared/constant/icon_broken.dart';
@@ -45,8 +46,16 @@ class AddProductScreen extends StatelessWidget {
     }
     return BlocConsumer<CubitLayout,StateLayout>(
       listener: (context ,state){
-
-        if(state is AddProductSuccessState||state is EditProductSuccessState){
+        if(state is EditProductSuccessState){
+          Navigator.pop(context,ProductModel(
+              description: descriptionController.text,
+              category: categoryController.text,
+              image: CubitLayout.get(context).productImageUrl,
+              price: double.parse(priceController.text),
+              id: productModel!.id,
+              name: nameController.text,
+              old_Price: double.parse(old_priceController.text)
+          ));
           priceController.clear();
           nameController.clear();
           descriptionController.clear();
@@ -54,7 +63,19 @@ class AddProductScreen extends StatelessWidget {
           CubitLayout.get(context).productImage=null;
           CubitLayout.get(context).productImageUrl=null;
 
+        }
+
+        if(state is AddProductSuccessState){
+
+          priceController.clear();
+          nameController.clear();
+          descriptionController.clear();
+          old_priceController.clear();
+          CubitLayout.get(context).productImage=null;
+          CubitLayout.get(context).productImageUrl=null;
           Navigator.pop(context);
+
+
 
 
         }

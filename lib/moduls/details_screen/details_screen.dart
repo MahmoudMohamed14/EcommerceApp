@@ -20,6 +20,7 @@ class DetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return BlocConsumer<CubitLayout,StateLayout>(
       listener: (context,state){
         if(state is AddCartSuccessState){
@@ -29,16 +30,19 @@ class DetailsScreen extends StatelessWidget {
           showToast(text: 'Delete Successfully', state: ToastState.SUCCESS);
           Navigator.pop(context);
         }
+        if(state is GetProductSuccessState)  CubitLayout.get(context).emitFunction();
       },
       builder:(context,state){
         var cubit=CubitLayout.get(context);
+
+
         return Scaffold(
-          appBar: AppBar(
+          appBar: AppBar (
             title: Text('Details'),
             actions: [
             if(  cubit.myData!.isAdmin!)  PopupMenuButton(
 
-                onSelected: (value){
+                onSelected: (value)async{
 
                   if("delete"==value){
                     cubit.deleteProduct(productId: productModel!.id!);
@@ -79,8 +83,15 @@ class DetailsScreen extends StatelessWidget {
 
                   }
                   if(value=='edit'){
-                    navigateTo(context, AddProductScreen(isEdit: true,productModel: productModel,));
+             final reslt=  await  Navigator.push(context,MaterialPageRoute(builder: (context)=> AddProductScreen(isEdit: true,productModel: productModel,)));
+             if(reslt!=null){
+               print(reslt.toMap());
+               productModel=reslt;
+
+
+             }
                   }
+
 
                 },
 

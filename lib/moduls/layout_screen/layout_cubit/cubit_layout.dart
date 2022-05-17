@@ -13,7 +13,6 @@ import 'package:projectgraduate/models/category_model.dart';
 import 'package:projectgraduate/models/product_model.dart';
 import 'package:projectgraduate/models/user_model.dart';
 import 'package:projectgraduate/moduls/cart/cart_screen.dart';
-import 'package:projectgraduate/moduls/details_screen/details_screen.dart';
 
 import 'package:projectgraduate/moduls/home/home_screen.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
@@ -144,7 +143,7 @@ class CubitLayout extends Cubit<StateLayout> {
         .doc(id).update(productModel.toMap()).then((value) {
 
       getProducts();
-      DetailsScreen(productModel);
+   //   DetailsScreen(productModel);
         emit(EditProductSuccessState());
 
 
