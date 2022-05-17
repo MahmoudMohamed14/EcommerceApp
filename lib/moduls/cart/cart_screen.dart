@@ -19,6 +19,9 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<CubitLayout, StateLayout>(
       listener: (context, state) {
+        if(state is DeleteItemCartSuccessState){
+          showToast(text: 'Delete Successfully', state: ToastState.SUCCESS);
+        }
 
       },
       builder: (context, state) {

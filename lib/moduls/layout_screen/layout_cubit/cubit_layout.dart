@@ -41,6 +41,7 @@ class CubitLayout extends Cubit<StateLayout> {
     getCategory();
     getProducts();
     changeBottomNav(index: 1);
+    getToCart();
   }
   File? productImage;
 

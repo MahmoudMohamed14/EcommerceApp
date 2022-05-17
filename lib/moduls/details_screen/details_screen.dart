@@ -19,7 +19,11 @@ class DetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CubitLayout,StateLayout>(
-      listener: (context,state){},
+      listener: (context,state){
+        if(state is AddCartSuccessState){
+          showToast(text: 'Add To Cart Successfully', state: ToastState.SUCCESS);
+        }
+      },
       builder:(context,state){
         var cubit=CubitLayout.get(context);
         return Scaffold(
@@ -32,7 +36,7 @@ class DetailsScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Stack(
-                        alignment: AlignmentDirectional.topStart,
+                       // alignment: AlignmentDirectional.topStart,
                         children: [
                           Container(
                             width: double.infinity,
@@ -47,12 +51,32 @@ class DetailsScreen extends StatelessWidget {
                           ),
                           Padding(
                             padding: EdgeInsetsDirectional.only(start: AppPadding.p20,top: AppPadding.p50),
-                            child: IconButton(
-                                icon: Icon(IconBroken.Arrow___Left,color: ColorManager.primary,),
-                              onPressed: (){
-                                  Navigator.pop(context);
-                              },
+                            child: CircleAvatar(
+                              backgroundColor: ColorManager.lightGrey.withOpacity(.4),
+
+                              child: IconButton(
+                                  icon: Icon(IconBroken.Arrow___Left,color: ColorManager.primary,),
+                                onPressed: (){
+                                    Navigator.pop(context);
+                                },
+                              ),
                             )),
+                          Align(
+                            alignment: AlignmentDirectional.bottomEnd,
+                            child: Padding(
+                                padding: EdgeInsetsDirectional.only(end: AppPadding.p20,top: AppPadding.p50),
+                                child: CircleAvatar(
+                                  backgroundColor: ColorManager.white,
+
+                                  child: IconButton(
+                                    icon: Icon(IconBroken.More_Circle,color: ColorManager.primary,),
+                                    onPressed: (){
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                )),
+                          ),
+
 
                         ],
                       ),
