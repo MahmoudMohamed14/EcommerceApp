@@ -154,8 +154,9 @@ class CubitLayout extends Cubit<StateLayout> {
   }
   List<ProductModel>?listAllProduct;
   void getProducts(){
-    listAllProduct=[];
+
     emit(GetProductLoadingState());
+    listAllProduct=[];
     FirebaseFirestore
         .instance.
     collection('Products')
@@ -240,24 +241,36 @@ class CubitLayout extends Cubit<StateLayout> {
     collection('Category')
         .add(productModel
         .toMap()).then((value) {
-      emit(AddCategorySuccessState());
-      getCategory();
+      FirebaseFirestore
+          .instance.
+      collection('Category').doc(value.id).update({'id':value.id}).then((value){
+        getCategory();
+        emit(AddCategorySuccessState());
+
+      }).catchError((onError){
+        emit(AddCategoryErrorState());
+      });
+
 
     }).catchError((onError){
       emit(AddCategoryErrorState());
     });
   }
   List<CategoryModel>?listAllCategory;
+
   void getCategory(){
-    listAllCategory=[];
+
     emit(GetCategoryLoadingState());
+    listAllCategory=[];
     FirebaseFirestore
         .instance.
         collection('Category')
         .get()
         .then((value) {
+
       value.docs.forEach((element) {
         listAllCategory!.add(CategoryModel.fromJson(element.data()));
+
 
       });
       emit(GetCategorySuccessState());

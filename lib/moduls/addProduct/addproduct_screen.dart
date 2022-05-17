@@ -87,7 +87,7 @@ class AddProductScreen extends StatelessWidget {
         var cubit =CubitLayout.get(context);
         return Scaffold(
           appBar: AppBar(
-            title: Text('AddProduct'),
+            title: Text(isEdit!?'EditProduct':'AddProduct'),
           ),
           body: Padding(
             padding: const EdgeInsets.all(20),
