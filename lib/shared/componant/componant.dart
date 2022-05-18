@@ -50,6 +50,7 @@ Widget defaultEditText(
       IconData? prefIcon,
       Function ?onPressSuffix,
       Function()?onPress,
+      Function(String s)?onchange,
       IconData? sufIcon,
       int ?maxLine=1,
 
@@ -117,6 +118,11 @@ Widget defaultEditText(
           onPress();
         }
 
+      },
+      onChanged: ( s){
+        if(onchange!=null){
+          onchange(s);
+        }
       },
       enabled: enableText,
       maxLines:maxLine

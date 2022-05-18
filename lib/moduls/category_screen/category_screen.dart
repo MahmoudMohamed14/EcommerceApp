@@ -14,11 +14,11 @@ import 'package:projectgraduate/shared/constant/icon_broken.dart';
 import 'package:projectgraduate/shared/language/applocale.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  List<ProductModel>? listCategory;
+ // List<ProductModel>? listCategory;
   String? title;
 
 
-  CategoriesScreen({this.listCategory, this.title});
+  CategoriesScreen({ this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +116,7 @@ class CategoriesScreen extends StatelessWidget {
         ),
           body: Padding(
             padding: const EdgeInsets.all(20),
-            child: HomeScreen.buildGridProduct(listCategory!, context),
+            child: HomeScreen.buildGridProduct(cubit.getCategoryList(categoryName: title), context),
           ),
         );},
 

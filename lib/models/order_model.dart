@@ -6,6 +6,7 @@ class OrderModel{
   List<Map<String,dynamic>>? orderProducts;
   List<CartModel>?lisCartModel;
   String?customerId;
+  String?orderId;
   String ?customerName;
   String ?customerPhone;
   String ?customerTitle;
@@ -18,19 +19,21 @@ class OrderModel{
   OrderModel(
       {this.totalPrice,
       this.orderProducts,
+        this.orderId,
       this.customerId,
       this.customerName,
       this.customerPhone,
       this.customerTitle,
-      this.customerNote,
+      this.customerNote='',
       this.date,
       this.time,
-      this.orderState});
+      this.orderState='Pending'});
 
   OrderModel.fromJson(Map<String,dynamic>  json){
     totalPrice=json['totalPrice'];
     orderProducts=json['orderProducts'];
     orderState =json['orderState'];
+    orderId =json['orderId'];
     customerId=json['customerId'];
     customerName=json['customerName'];
     customerPhone=json['customerPhone'];
@@ -53,6 +56,7 @@ class OrderModel{
     return {
       "totalPrice":totalPrice,
       "orderProducts":orderProducts,
+      "orderId": orderId,
       "orderState":orderState,
       "customerId":customerId,
       "customerName":customerName,

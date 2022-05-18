@@ -25,7 +25,6 @@ class CategoryImageUploadSuccessState extends StateLayout{}
 class CategoryImageUploadErrorState extends StateLayout{}
 class AddCategorySuccessState extends StateLayout{}
 class AddCategoryErrorState extends StateLayout{}
-
 class AddCategoryLoadingState extends StateLayout{}
 class GetCategoryErrorState extends StateLayout{}
 class GetCategorySuccessState extends StateLayout{}
@@ -40,6 +39,11 @@ class AddCartErrorState extends StateLayout{}
 class AddCartSuccessState extends StateLayout{}
 class DeleteItemCartErrorState extends StateLayout{}
 class DeleteItemCartSuccessState extends StateLayout{}
+class DeleteAllCartErrorState extends StateLayout{}
+class DeleteAllCartSuccessState extends StateLayout{}
 class UpdateItemCartErrorState extends StateLayout{}
 class UpdateItemCartSuccessState extends StateLayout{}
 class EmitToRebuildState extends StateLayout{}
+class SearchState extends StateLayout{}
+class AddOrderErrorState extends StateLayout{}
+class AddOrderSuccessState extends StateLayout{}

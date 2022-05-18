@@ -26,6 +26,7 @@ class AddProductScreen extends StatelessWidget {
   var old_priceController=TextEditingController();
   var descriptionController=TextEditingController();
   var categoryController=TextEditingController();
+  var keyForm=GlobalKey<FormState>();
 
 
 
@@ -66,6 +67,7 @@ class AddProductScreen extends StatelessWidget {
         }
 
         if(state is AddProductSuccessState){
+          CubitLayout.get(context).getCategoryList(categoryName: categoryName);
 
           priceController.clear();
           nameController.clear();
@@ -92,103 +94,111 @@ class AddProductScreen extends StatelessWidget {
           body: Padding(
             padding: const EdgeInsets.all(20),
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  if(state is ProductImageUploadLoadingState)
-                    Column(children:const [
-                      LinearProgressIndicator(),
-                      SizedBox(height: 20,),
-                    ],),
-                  defaultEditText(control: nameController, label: 'name', validat: (s){
-                    if(s!.isEmpty){
-                      return'${getLang(context, "name_empty")}';
-                    }
-                    return null;
+              child: Form(
+                key: keyForm,
+                child: Column(
+                  children: [
+                    if(state is ProductImageUploadLoadingState)
+                      Column(children:const [
+                        LinearProgressIndicator(),
+                        SizedBox(height: 20,),
+                      ],),
+                    defaultEditText(control: nameController, label: 'name', validat: (s){
+                      if(s!.isEmpty){
+                        return'${getLang(context, "name_empty")}';
+                      }
+                      return null;
 
-                  },prefIcon: IconBroken.Edit),
-                  SizedBox(height: 20,),
-                  defaultEditText(control: categoryController, label: 'category', validat: (s){
-                    if(s!.isEmpty){
-                      return'${getLang(context, "name_empty")}';
-                    }
-                    return null;
+                    },prefIcon: IconBroken.Edit),
+                    SizedBox(height: 20,),
+                    defaultEditText(control: categoryController, label: 'category', validat: (s){
+                      if(s!.isEmpty){
+                        return'Category Empty';
+                      }
+                      return null;
 
-                  },prefIcon: IconBroken.Category),
-                  SizedBox(height: 20,),
-                  defaultEditText(control: priceController, label: 'price', validat: (s){
-                    if(s!.isEmpty){
-                      return'${getLang(context, "name_empty")}';
-                    }
-                    return null;
+                    },prefIcon: IconBroken.Category),
+                    SizedBox(height: 20,),
+                    defaultEditText(control: priceController, label: 'price', validat: (s){
+                      if(s!.isEmpty){
+                        return'Price Empty';
+                      }
+                      return null;
 
-                  },prefIcon: IconBroken.Wallet,textType: TextInputType.number),
-                  SizedBox(height: 20,),
-                  defaultEditText(control: old_priceController, label: 'old price', validat: (s){
-                    if(s!.isEmpty){
+                    },prefIcon: IconBroken.Wallet,textType: TextInputType.number),
+                    SizedBox(height: 20,),
+                    defaultEditText(control: old_priceController, label: 'old price', validat: (s){
+                      if(s!.isEmpty){
 
-                      return'${getLang(context, "name_empty")}';
-                    }
-                    return null;
+                        return'Old Price Empty';
+                      }
+                      return null;
 
-                  },prefIcon: IconBroken.Wallet,textType: TextInputType.number),
-                  SizedBox(height: 20,),
-                  defaultEditText(control: descriptionController, label: 'description', validat: (s){
-                    if(s!.isEmpty){
-                      return'${getLang(context, "name_empty")}';
-                    }
-                    return null;
+                    },prefIcon: IconBroken.Wallet,textType: TextInputType.number),
+                    SizedBox(height: 20,),
+                    defaultEditText(control: descriptionController, label: 'description', validat: (s){
+                      if(s!.isEmpty){
+                        return'Description Empty';
+                      }
+                      return null;
 
-                  },maxLine: null,prefIcon: IconBroken.Document),
-                  SizedBox(height: 20,),
-                  InkWell(
-                    onTap: (){
-                      cubit.getProductImage().then((value) {
-                        cubit.uploadProductImage();
+                    },maxLine: null,prefIcon: IconBroken.Document),
+                    SizedBox(height: 20,),
+                    InkWell(
+                      onTap: (){
+                        cubit.getProductImage().then((value) {
+                          cubit.uploadProductImage();
 
 
-                      }).catchError((onError){});
-                    },
-                    child: Container(
-                      height: 200,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        }).catchError((onError){});
+                      },
+                      child: Container(
+                        height: 200,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+
+                        ),
+                        child:isEdit!?(cubit.productImageUrl == null?Icon(IconBroken.Paper_Fail,size: AppSize.s18): Image(image: NetworkImage(cubit.productImageUrl!))):(cubit.productImage == null? Icon(Icons.image,size: 100,):cubit.productImageUrl == null?Icon(IconBroken.Paper_Fail,size: AppSize.s18): Image(image: NetworkImage(cubit.productImageUrl!))),
 
                       ),
-                      child:isEdit!?(cubit.productImageUrl == null?Icon(IconBroken.Paper_Fail,size: AppSize.s18): Image(image: NetworkImage(cubit.productImageUrl!))):(cubit.productImage == null? Icon(Icons.image,size: 100,):cubit.productImageUrl == null?Icon(IconBroken.Paper_Fail,size: AppSize.s18): Image(image: NetworkImage(cubit.productImageUrl!))),
-
                     ),
-                  ),
-                  SizedBox(height: 20,),
-                  defaultButton(onPress: (){
-                    if(state is ProductImageUploadLoadingState||state is EditProductLoadingState){}else {
-                    if(isEdit!){
-                      cubit.editProduct(
-                          description: descriptionController.text,
-                          category: categoryController.text,
-                          image: cubit.productImageUrl,
-                          price: priceController.text,
-                          name: nameController.text,
-                          id: productModel!.id,
-                          old_price: old_priceController.text
+                    SizedBox(height: 20,),
+                    defaultButton(onPress: (){
+                      if(keyForm.currentState!.validate()&& cubit.productImageUrl !=null) {
+                        if (state is ProductImageUploadLoadingState ||
+                            state is EditProductLoadingState) {} else {
+                          if (isEdit!) {
+                            cubit.editProduct(
+                                description: descriptionController.text,
+                                category: categoryController.text,
+                                image: cubit.productImageUrl,
+                                price: priceController.text,
+                                name: nameController.text,
+                                id: productModel!.id,
+                                old_price: old_priceController.text
 
-                      );
+                            );
+                          } else {
+                            cubit.addProduct(
+                                description: descriptionController.text,
+                                category: categoryController.text,
+                                image: cubit.productImageUrl,
+                                price: priceController.text,
+                                name: nameController.text,
+                                old_price: old_priceController.text
 
-                    }else{  cubit.addProduct(
-                          description: descriptionController.text,
-                          category: categoryController.text,
-                          image: cubit.productImageUrl,
-                          price: priceController.text,
-                          name: nameController.text,
-                          old_price: old_priceController.text
-
-                      );}
-                    }
-                  }, name:isEdit!? 'Edit':'Add')
+                            );
+                          }
+                        }
+                      }
+                      //
+                    }, name:isEdit!? 'Edit':'Add')
 
 
-                ],
+                  ],
+                ),
               ),
             ),
           ),

@@ -21,18 +21,28 @@ import '../../shared/constant/values_manager.dart';
 
 class HomeScreen extends StatelessWidget {
 
+  var searchController=TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CubitLayout,StateLayout>(
       listener: (context,stare){},
       builder:(context,stare){
         var cubit=CubitLayout.get(context);
-        return Padding(
-          padding: const EdgeInsets.all(20),
-          child: SingleChildScrollView(
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                defaultEditText(control: searchController,
+                    label: 'Search',prefIcon: IconBroken.Search,
+                    validat: (s){},onchange: (value){
+                    //  cubit.listProductSearch =  cubit.listAllProduct!.where((element) => element.name!.toLowerCase().contains(value.toLowerCase())).toList();
+
+                    cubit.search(value);
+                }),
+                const  SizedBox(height: AppSize.s20,),
                 Text('Categories',style:getSemiBoldStyle(color: ColorManager.darkGrey,fontSize: FontSize.s20)),
               const  SizedBox(height: AppSize.s20,),
                 SingleChildScrollView(
@@ -48,7 +58,9 @@ class HomeScreen extends StatelessWidget {
                        },
                        child: Container(
                          decoration: BoxDecoration(
-                             border: Border.all(color: ColorManager.lightPrimary)
+                             border: Border.all(color: ColorManager.lightPrimary),
+                           borderRadius: BorderRadius.circular(20),
+
                          ),
                          height: AppSize.s100,
                          width: AppSize.s100,
@@ -108,7 +120,7 @@ class HomeScreen extends StatelessWidget {
                 Text('Products',style:getSemiBoldStyle(color: ColorManager.darkGrey,fontSize: FontSize.s20)),
               const  SizedBox(height: AppSize.s20,),
 
-                buildGridProduct(cubit.listAllProduct!,context),
+                buildGridProduct(searchController.text.isNotEmpty?cubit.listProductSearch:cubit.listAllProduct!,context),
               ],
             ),
           ),
@@ -223,7 +235,7 @@ class HomeScreen extends StatelessWidget {
   Widget buildCategoryItem(context,CategoryModel categoryModel){
     return InkWell(
       onTap: (){
-        navigateTo(context, CategoriesScreen(title: categoryModel.category,listCategory:CubitLayout.get(context).getCategoryList(categoryName: categoryModel.category) ,));
+        navigateTo(context, CategoriesScreen(title: categoryModel.category ,));
       },
       child: Container(
         decoration:BoxDecoration(
@@ -247,20 +259,23 @@ class HomeScreen extends StatelessWidget {
 
             Container(
               decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(.7),
+                  color: Colors.black.withOpacity(.5),
                   borderRadius: BorderRadius.vertical(bottom:Radius.circular(20) )
               ),
 
 
                 width: 100,
 
-                child: Text(
-                  '${categoryModel.category}',
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
+                child: Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: Text(
+                    '${categoryModel.category}',
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
 
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: Colors.white,),
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: Colors.white,),
+                  ),
                 )
             ),
           ],

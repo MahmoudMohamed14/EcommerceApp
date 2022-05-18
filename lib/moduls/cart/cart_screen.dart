@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:projectgraduate/models/cart_model.dart';
+import 'package:projectgraduate/moduls/check_out/checkout_screen.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/cubit_layout.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
 import 'package:projectgraduate/shared/componant/componant.dart';
@@ -48,7 +49,10 @@ class CartScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Expanded(child: defaultButton(onPress: (){}, name: 'check out'))
+                  Expanded(child: defaultButton(onPress: (){
+
+                   navigateTo(context, CheckOutScreen());
+                  }, name: 'check out'))
                 ],
               )
             ],

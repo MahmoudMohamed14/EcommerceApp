@@ -1,5 +1,6 @@
 
 import 'dart:io';
+import 'dart:math';
 
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:projectgraduate/models/cart_model.dart';
 import 'package:projectgraduate/models/category_model.dart';
+import 'package:projectgraduate/models/order_model.dart';
 import 'package:projectgraduate/models/product_model.dart';
 import 'package:projectgraduate/models/user_model.dart';
 import 'package:projectgraduate/moduls/cart/cart_screen.dart';
@@ -153,10 +155,16 @@ class CubitLayout extends Cubit<StateLayout> {
     });
   }
   List<ProductModel>?listAllProduct;
+  List<ProductModel> listProductSearch=[];
+  void search(String value){
+   listProductSearch = listAllProduct!.where((element) => element.name!.toLowerCase().contains(value.toLowerCase())).toList();
+ emit(SearchState());
+  }
   void getProducts(){
+    listAllProduct=[];
 
     emit(GetProductLoadingState());
-    listAllProduct=[];
+
     FirebaseFirestore
         .instance.
     collection('Products')
@@ -259,9 +267,9 @@ class CubitLayout extends Cubit<StateLayout> {
   List<CategoryModel>?listAllCategory;
 
   void getCategory(){
-
-    emit(GetCategoryLoadingState());
     listAllCategory=[];
+    emit(GetCategoryLoadingState());
+
     FirebaseFirestore
         .instance.
         collection('Category')
@@ -270,7 +278,6 @@ class CubitLayout extends Cubit<StateLayout> {
 
       value.docs.forEach((element) {
         listAllCategory!.add(CategoryModel.fromJson(element.data()));
-
 
       });
       emit(GetCategorySuccessState());
@@ -307,6 +314,8 @@ class CubitLayout extends Cubit<StateLayout> {
   }
   List<CartModel> listCartModel=[];
   List<Map<String,dynamic>>list=[];
+  List<Map<String,dynamic>>listProductOfOrder=[];
+
   String cartId='';
   int counteraddToCart=0;
   double totalOfCart=0;
@@ -335,7 +344,7 @@ class CubitLayout extends Cubit<StateLayout> {
     FirebaseFirestore.instance
         .collection('users')
         .doc(uId!).collection('cart').doc('mycart').get().then((value) {
-          if(value.data()==null){
+          if(value.data()==null||value.data()!['cart']==null){
             FirebaseFirestore.instance
                 .collection('users')
                 .doc(uId!).collection('cart').doc("mycart").set({'cart':[]});
@@ -401,10 +410,12 @@ class CubitLayout extends Cubit<StateLayout> {
   }
   double calculateTotalChecke(){
     totalOfCart=0;
+    listProductOfOrder=[];
     if(listCartModel.length>0){
       listCartModel.forEach((element) {
 
         totalOfCart+=(element.price   * element.quantity);
+        listProductOfOrder.add(element.toMap());
 
       });
     }
@@ -414,5 +425,40 @@ class CubitLayout extends Cubit<StateLayout> {
   void emitFunction() {
     emit(EmitToRebuildState());
   }
+
+  void deleteAllCart(){
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId!).collection('cart').doc("mycart").update(
+      {'cart': FieldValue.delete()},).then((value) {
+      getToCart();
+      emit( DeleteAllCartSuccessState());
+
+    }).catchError((onError){
+      emit( DeleteAllCartErrorState());
+    });
+  }
+  String getRandomString(int length) {
+    const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    Random _rnd = Random();
+    return String.fromCharCodes(Iterable.generate(
+        length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+  }
+  void addOrder(OrderModel orderModel){
+    FirebaseFirestore.instance
+        .collection('order')
+        .doc(orderModel.orderId)
+        .set(orderModel.toMap())
+        .then((value) {
+          deleteAllCart();
+          emit(AddOrderSuccessState ());
+    })
+        .catchError((onError){
+      emit(AddOrderErrorState ());
+    });
+
+
+  }
+
 
 }
