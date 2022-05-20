@@ -47,3 +47,10 @@ class EmitToRebuildState extends StateLayout{}
 class SearchState extends StateLayout{}
 class AddOrderErrorState extends StateLayout{}
 class AddOrderSuccessState extends StateLayout{}
+class GetOrderErrorState extends StateLayout{}
+class GetOrderLoadingState extends StateLayout{}
+class GetOrderSuccessState extends StateLayout{}
+class CancelOrderSuccessState extends StateLayout{}
+class CancelOrderErrorState extends StateLayout{}
+class DoneOrderSuccessState extends StateLayout{}
+class DoneOrderErrorState extends StateLayout{}

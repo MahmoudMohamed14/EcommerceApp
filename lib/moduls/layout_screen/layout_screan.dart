@@ -25,44 +25,56 @@ class LayoutScreen extends StatelessWidget {
 
 
           var cubit =CubitLayout.get(context);
-    return Scaffold(
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
 
 
-bottomNavigationBar:  CurvedNavigationBar(
+bottomNavigationBar: CurvedNavigationBar(
   backgroundColor: ColorManager.white,
   color:  ColorManager.primary,
   index: cubit.index,
   items: <Widget>[
-    Icon(IconBroken.Category, size: 35,color: ColorManager.white,),
-    Icon(IconBroken.Home, size: 35,color: ColorManager.white,),
-    Stack(
+      Icon(IconBroken.Category, size: 35,color: ColorManager.white,),
+      Icon(IconBroken.Home, size: 35,color: ColorManager.white,),
+      Stack(
 
-      alignment: AlignmentDirectional.topStart,
-      children: [
-        if(cubit.listCartModel.length>0) CircleAvatar(
-          radius: 10,
-          backgroundColor: ColorManager.white,
-          child: Text('${cubit.listCartModel.length}'),
-        ),
-        Icon( IconBroken.Buy, size: 35,color: ColorManager.white,),
+        alignment: AlignmentDirectional.topStart,
+        children: [
+          if(cubit.listCartModel.length>0) CircleAvatar(
+            radius: 10,
+            backgroundColor: ColorManager.white,
+            child: Text('${cubit.listCartModel.length}'),
+          ),
+          Icon( IconBroken.Buy, size: 35,color: ColorManager.white,),
 
-      ],
-    ),
+        ],
+      ),
   ],
   animationDuration: Duration(milliseconds: 300),
   onTap: (index) {
-    cubit.changeBottomNav(index: index);
+      cubit.changeBottomNav(index: index);
   },
   height: 50,
 ),
-      appBar: AppBar(
-        title: Text('${cubit.listTitle[cubit.index]}'),
-        actions: [IconButton(icon: Icon(IconBroken.Logout),onPressed: (){
-          signOut(context, LoginScreen());
+        appBar: AppBar(
+          title: Text('${cubit.listTitle[cubit.index]}'),
+          actions: [IconButton(icon: Icon(IconBroken.Logout),onPressed: (){
+            signOut(context, LoginScreen());
 
-        },)],
+          },)],
+
+          bottom: cubit.index==0?TabBar(
+
+            indicatorColor: ColorManager.lightGrey,
+              tabs:const [
+                Tab(icon: Icon(Icons.update),),
+                Tab(icon: Icon(IconBroken.Shield_Done),),
+                Tab(icon: Icon(IconBroken.Shield_Fail),),
+                ]):null,
+        ),
+         body: cubit.listWidget[cubit.index],
       ),
-       body: cubit.listWidget[cubit.index],
     );
     },
 

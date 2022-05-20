@@ -3,7 +3,7 @@ import 'package:projectgraduate/models/cart_model.dart';
 class OrderModel{
 
   dynamic totalPrice;
-  List<Map<String,dynamic>>? orderProducts;
+  List<dynamic>? orderProducts;
   List<CartModel>?lisCartModel;
   String?customerId;
   String?orderId;
@@ -41,11 +41,7 @@ class OrderModel{
     customerNote=json['customerNote'];
     date=json['date'];
     time=json['time'];
-    if(orderProducts!.length>0 && orderProducts!=null) {
-      orderProducts!.forEach((element) {
-        lisCartModel!.add(CartModel.fromJson(element));
-      });
-    }
+
 
 
 

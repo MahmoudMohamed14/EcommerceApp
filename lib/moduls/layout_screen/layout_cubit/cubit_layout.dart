@@ -18,6 +18,8 @@ import 'package:projectgraduate/moduls/cart/cart_screen.dart';
 
 import 'package:projectgraduate/moduls/home/home_screen.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
+
+import 'package:projectgraduate/moduls/order/order_screen.dart';
 import 'package:projectgraduate/shared/constant/data_shared.dart';
 
 
@@ -27,8 +29,8 @@ class CubitLayout extends Cubit<StateLayout> {
   static CubitLayout get(context) {
     return BlocProvider.of(context);
   }
-  List<String>listTitle=['Category','Product','Card'];
-  List<Widget>listWidget=[HomeScreen(),HomeScreen(),CartScreen()];
+  List<String>listTitle=['Order','Home','Card'];
+  List<Widget>listWidget=[OrderScreen(),HomeScreen(),CartScreen()];
 
   int index = 1;
   void  changeBottomNav({required int index})
@@ -44,6 +46,7 @@ class CubitLayout extends Cubit<StateLayout> {
     getProducts();
     changeBottomNav(index: 1);
     getToCart();
+    getAllOrder();
   }
   File? productImage;
 
@@ -451,6 +454,7 @@ class CubitLayout extends Cubit<StateLayout> {
         .set(orderModel.toMap())
         .then((value) {
           deleteAllCart();
+          getAllOrder();
           emit(AddOrderSuccessState ());
     })
         .catchError((onError){
@@ -458,6 +462,92 @@ class CubitLayout extends Cubit<StateLayout> {
     });
 
 
+  }
+  List<OrderModel>listPendingOrder=[];
+  List<OrderModel>listCancelOrder=[];
+  List<OrderModel>listDoneOrder=[];
+
+  void getAllOrder(){
+    listPendingOrder=[];
+    listCancelOrder=[];
+    listDoneOrder=[];
+
+    emit(GetOrderLoadingState());
+    FirebaseFirestore.instance
+        .collection('order')
+        .get()
+        .then((value) {
+          value.docs.forEach((element) {
+            if(element.data()['orderState']=='Pending') {
+
+              if(myData!.isAdmin!){
+                listPendingOrder.add(OrderModel.fromJson(element.data()));
+              }else {
+                if(element.data()['customerId']==myData!.id){
+                  listPendingOrder.add(OrderModel.fromJson(element.data()));
+                }
+              }
+
+
+
+            }
+           else if(element.data()['orderState']=='Cancel'){
+              if(myData!.isAdmin!){
+                listCancelOrder.add(OrderModel.fromJson(element.data()));
+              }else {
+                if(element.data()['customerId']==myData!.id){
+                 listCancelOrder.add(OrderModel.fromJson(element.data()));
+                }
+              }
+            }else{
+              if(myData!.isAdmin!){
+               listDoneOrder.add(OrderModel.fromJson(element.data()));
+              }else {
+                if(element.data()['customerId']==myData!.id){
+                  listDoneOrder.add(OrderModel.fromJson(element.data()));
+                }
+              }
+            }
+            print( listCancelOrder);
+
+          });
+
+      emit(GetOrderSuccessState ());
+    })
+        .catchError((onError){
+          print( 'order Error '+ onError.toString());
+      emit(GetOrderErrorState ());
+    });
+
+
+  }
+
+
+  void  cancelOrder(String id){
+    FirebaseFirestore.instance
+        .collection('order')
+        .doc(id)
+        .update({"orderState":'Cancel'})
+        .then((value) {
+          getAllOrder();
+   emit( CancelOrderSuccessState());
+    }).catchError((onError){
+      emit( CancelOrderErrorState());
+
+    });
+  }
+  void  clickDoneOrder(String id){
+    FirebaseFirestore.instance
+        .collection('order')
+        .doc(id)
+        .update({"orderState":'Done'})
+        .then((value) {
+      getAllOrder();
+      emit( DoneOrderSuccessState());
+    }).catchError((onError){
+      emit( DoneOrderErrorState());
+
+    });
   }
 
 

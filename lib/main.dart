@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<CubitLayout>(create: (context)=>CubitLayout()..getProducts()..changeBottomNav(index: 1)..getCategory()..getUserData()..getToCart()),
+        BlocProvider<CubitLayout>(create: (context)=>CubitLayout()..getProducts()..changeBottomNav(index: 1)..getCategory()..getUserData()..getToCart()..getAllOrder()),
       ],
       child: MaterialApp(
 
