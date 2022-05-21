@@ -45,7 +45,7 @@ class CartScreen extends StatelessWidget {
                     child: Row(
                       children: [
                         Text("Total: ",style: Theme.of(context).textTheme.headline1,),
-                        Text("${cubit.calculateTotalChecke()}",style: Theme.of(context).textTheme.headline2,)
+                        Text("${cubit.calculateTotalCheck()}",style: Theme.of(context).textTheme.headline2,)
                       ],
                     ),
                   ),

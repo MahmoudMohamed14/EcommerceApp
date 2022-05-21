@@ -17,6 +17,8 @@ class GetProductErrorState extends StateLayout{}
 class GetProductSuccessState extends StateLayout{}
 class DeleteProductErrorState extends StateLayout{}
 class DeleteProductSuccessState extends StateLayout{}
+class DeleteCategoryErrorState extends StateLayout{}
+class DeleteCategorySuccessState extends StateLayout{}
 class GetProductLoadingState extends StateLayout{}
 class CategoryImagePickerSuccessState extends StateLayout{}
 class CategoryImagePickerErrorState extends StateLayout{}
@@ -54,3 +56,5 @@ class CancelOrderSuccessState extends StateLayout{}
 class CancelOrderErrorState extends StateLayout{}
 class DoneOrderSuccessState extends StateLayout{}
 class DoneOrderErrorState extends StateLayout{}
+class DeleteOrderSuccessState extends StateLayout{}
+class DeleteOrderErrorState extends StateLayout{}

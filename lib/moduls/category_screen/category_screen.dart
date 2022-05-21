@@ -15,15 +15,18 @@ import 'package:projectgraduate/shared/language/applocale.dart';
 
 class CategoriesScreen extends StatelessWidget {
  // List<ProductModel>? listCategory;
-  String? title;
+  CategoryModel ?categoryModel;
 
 
-  CategoriesScreen({ this.title});
+  CategoriesScreen({ this.categoryModel,});
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CubitLayout,StateLayout>(
       listener: (context,state){
+        if(state is DeleteCategorySuccessState){
+          Navigator.pop(context);
+        }
 
       },
       builder:(context,state){
@@ -31,11 +34,11 @@ class CategoriesScreen extends StatelessWidget {
         return Scaffold(
           floatingActionButton: cubit.myData!.isAdmin!?FloatingActionButton(
             onPressed: (){
-              navigateTo(context, AddProductScreen(categoryName:title ,));
+              navigateTo(context, AddProductScreen(categoryName:categoryModel!.category ,));
             },
             child:Icon(IconBroken.Plus) ,
           ):null,
-        appBar: AppBar(title: Text(title!,),
+        appBar: AppBar(title: Text(categoryModel!.category!,),
           actions: [
             if(  cubit.myData!.isAdmin!)  PopupMenuButton(
 
@@ -43,47 +46,39 @@ class CategoriesScreen extends StatelessWidget {
 
                 if("delete"==value){
 
-                  // CubitLayout.get(context).getAllStudent(code: model.code,formOut: true);
 
-                  // showDialog(context: context,
-                  //     builder: (context)=> AlertDialog(
-                  //       title: Text('${getLang(context, "delete_class")}'),
-                  //       content:Text('${getLang(context, "wantDelete_class")}'),
-                  //
-                  //       actions: [
-                  //         TextButton(onPressed:(){
-                  //           Navigator.pop(context);
-                  //         }, child: Text('${getLang(context, "no")}')),
-                  //         TextButton(onPressed: (){
-                  //
-                  //           CubitLayout.get(context).listStudent.forEach((element) {
-                  //             CubitApp.get(context).deleteClassRoomFromStudent(code: model.code!,studentEmail: element.studentEmail);
-                  //
-                  //           });
-                  //           CubitApp.get(context).deleteClass(code: model.code!);
-                  //           DioHelper.postNotification(to: '/topics/${model.code!}',
-                  //               title: model.className!,
-                  //               body: 'you teacher has delete this class',
-                  //               data: { 'payload': 'unsub${model.code!}',});
-                  //           CubitApp.get(context).deleteClassRoomFromStudent(code: model.code!,studentEmail: model.teacherEmail,);
-                  //
-                  //           showToast(text: value.toString(), state: ToastState.SUCCESS);
-                  //
-                  //           Navigator.pop(context);
-                  //         }, child: Text('${getLang(context, "yes")}')),
-                  //
-                  //       ],
-                  //     ),
-                  //     barrierDismissible: false
-                  //
-                  // );
+
+                  showDialog(context: context,
+                      builder: (context)=> AlertDialog(
+                        title: Text('Delete Category'),
+                        content:Text('Do you want to delete this Category '),
+
+                        actions: [
+                          TextButton(onPressed:(){
+                            Navigator.pop(context);
+                          }, child: Text('${getLang(context, "no")}')),
+                          TextButton(onPressed: (){
+                            cubit.deleteCategory(categoryId: categoryModel!.id!);
+
+
+
+                            showToast(text: value.toString(), state: ToastState.SUCCESS);
+                            Navigator.pop(context);
+
+
+                          }, child: Text('${getLang(context, "yes")}')),
+
+                        ],
+                      ),
+                      barrierDismissible: false
+
+                  );
 
                 }
                 if(value=='edit'){
-                  final reslt=  await  Navigator.push(context,MaterialPageRoute(builder: (context)=> AddCategoryScreen()));
+                  final reslt=  await  Navigator.push(context,MaterialPageRoute(builder: (context)=> AddCategoryScreen(isEdit: true,categoryModel: categoryModel,)));
                   if(reslt!=null){
                     print(reslt.toMap());
-
 
 
                   }
@@ -116,7 +111,7 @@ class CategoriesScreen extends StatelessWidget {
         ),
           body: Padding(
             padding: const EdgeInsets.all(20),
-            child: HomeScreen.buildGridProduct(cubit.getCategoryList(categoryName: title), context),
+            child: HomeScreen.buildGridProduct(cubit.getCategoryList(categoryName: categoryModel!.category), context),
           ),
         );},
 

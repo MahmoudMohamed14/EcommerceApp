@@ -235,7 +235,7 @@ class HomeScreen extends StatelessWidget {
   Widget buildCategoryItem(context,CategoryModel categoryModel){
     return InkWell(
       onTap: (){
-        navigateTo(context, CategoriesScreen(title: categoryModel.category ,));
+        navigateTo(context, CategoriesScreen(categoryModel: categoryModel,));
       },
       child: Container(
         decoration:BoxDecoration(

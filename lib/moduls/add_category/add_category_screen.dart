@@ -14,14 +14,14 @@ class AddCategoryScreen extends StatelessWidget {
   var categoryNameController=TextEditingController();
   var keyForm=GlobalKey<FormState>();
   CategoryModel? categoryModel;
-   bool? isEdit;
+   bool isEdit;
 
 
   AddCategoryScreen({this.categoryModel, this.isEdit=false});
 
   @override
   Widget build(BuildContext context) {
-    if(isEdit!){
+    if(isEdit){
       categoryNameController.text=categoryModel!.category!;
       CubitLayout.get(context).categoryImageUrl=categoryModel!.image;
     }
@@ -44,7 +44,7 @@ class AddCategoryScreen extends StatelessWidget {
 
 
           appBar: AppBar(
-            title: Text(isEdit!?'EditProduct':'AddProduct'),
+            title: Text(isEdit?'EditProduct':'AddProduct'),
           ),
           body: SingleChildScrollView(
             child: Padding(
@@ -83,7 +83,7 @@ class AddCategoryScreen extends StatelessWidget {
                           borderRadius: BorderRadius.all(Radius.circular(10)),
 
                         ),
-                        child:cubit.categoryImage == null? Icon(Icons.image,size: 100,):cubit.categoryImageUrl == null?Icon(IconBroken.Paper_Fail,size: AppSize.s18): Image(image: NetworkImage(cubit.categoryImageUrl!)),
+                        child:isEdit?(cubit.categoryImageUrl == null?Icon(IconBroken.Paper_Fail,size: AppSize.s18): Image(image: NetworkImage(cubit.categoryImageUrl!))):(cubit.categoryImage == null? Icon(Icons.image,size: 100,):cubit.categoryImageUrl == null?Icon(IconBroken.Paper_Fail,size: AppSize.s18): Image(image: NetworkImage(cubit.categoryImageUrl!))),
 
                       ),
                     ),
@@ -91,11 +91,18 @@ class AddCategoryScreen extends StatelessWidget {
                     defaultButton(onPress: (){
                       if(keyForm.currentState!.validate()&&cubit.categoryImageUrl !=null) {
                         if (state is CategoryImageUploadLoadingState) {} else {
-                          cubit.addCategory(image: cubit.categoryImageUrl,
-                              category: categoryNameController.text);
+                          if(isEdit) {
+
+                            cubit.editCategory(image: cubit.categoryImageUrl,
+                                category: categoryNameController.text,id: categoryModel!.id);
+                          }else{
+                            cubit.addCategory(image: cubit.categoryImageUrl,
+                                category: categoryNameController.text);
+
+                          }
                         }
                       }
-                    }, name:isEdit!?'Edit': 'Add')
+                    }, name:isEdit?'Edit': 'Add')
 
 
                   ],

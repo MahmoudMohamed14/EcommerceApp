@@ -179,6 +179,7 @@ void signOut( context,widget) {
 
   FirebaseAuth.instance.signOut().then((value) {
    CacheHelper.removeWithKey(key: 'uId');
+   CacheHelper.removeWithKey(key: 'admin');
     navigateAndFinish(context, widget);
   });
 
@@ -186,8 +187,6 @@ void signOut( context,widget) {
 
 }
 Widget launcherScreen({bool? iscurrentuser,required Widget loginScreen ,required Widget homeScreen }){
-
-
   Widget launch=loginScreen;
   if(iscurrentuser!){
     launch= homeScreen;

@@ -8,6 +8,8 @@ class ProductModel{
   String ?image;
   String?category;
   String?description;
+  String ?adminId;
+
 
 
   ProductModel(
@@ -18,6 +20,7 @@ class ProductModel{
         this.id='',
         this.name,
         this.image,
+        this.adminId,
         this.category});
 
   ProductModel.fromJson(Map<String,dynamic>  json){
@@ -28,6 +31,7 @@ description=json['description'];
     name=json['name'];
     image=json['image'];
     category=json['category'];
+    adminId=json['adminId'];
 
 
 
@@ -41,7 +45,8 @@ description=json['description'];
       "description":description,
       "id":id,
      "image":image,
-      "category":category
+      "category":category,
+      "adminId":adminId,
     };
 
     }

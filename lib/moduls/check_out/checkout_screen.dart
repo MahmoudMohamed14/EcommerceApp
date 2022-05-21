@@ -21,7 +21,12 @@ class CheckOutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CubitLayout,StateLayout>(
-      listener: (context,state){},
+      listener: (context,state){
+        if(state is AddOrderSuccessState){
+          Navigator.pop(context);
+          CubitLayout.get(context).index=0;
+        }
+      },
       builder:(context,state){
         var cubit=CubitLayout.get(context);
         return  Scaffold(
@@ -51,23 +56,28 @@ class CheckOutScreen extends StatelessWidget {
                   },maxLine: null,prefIcon: IconBroken.Document),
                   SizedBox(height: 20,),
                   defaultButton(onPress: (){
-                   cubit.addOrder(
-                     OrderModel(
-                       time: TimeOfDay.now().format(context),
-                       customerId: cubit.myData!.id,
-                       customerName: cubit.myData!.name,
-                       customerNote: notesController.text,
-                       customerPhone: cubit.myData!.phone,
-                       customerTitle: titleController.text,
-                       date: DateFormat.yMMMd().format(DateTime.now()),
-                       orderId: cubit.getRandomString(5).toLowerCase(),
-                       orderProducts: cubit.listProductOfOrder,
-                       totalPrice: cubit.calculateTotalChecke().toString()
+                    if(keyForm.currentState!.validate()){
+
+                      cubit.addOrder(
+                          OrderModel(
+                              time: TimeOfDay.now().format(context),
+                              customerId: cubit.myData!.id,
+                              customerName: cubit.myData!.name,
+                              customerNote: notesController.text,
+                              customerPhone: cubit.myData!.phone,
+                              customerTitle: titleController.text,
+                              date: DateFormat.yMMMd().format(DateTime.now()),
+                              orderId: cubit.getRandomString(5).toLowerCase(),
+                              orderProducts: cubit.listProductOfOrder,
+                              totalPrice: cubit.calculateTotalCheck().toString()
 
 
-                     )
+                          )
 
-                   );
+                      );
+
+                    }
+
 
 
                    // cubit.addOrder(OrderModel(time: TimeOfDay.now()))

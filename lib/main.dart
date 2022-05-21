@@ -22,6 +22,10 @@ void main()async {
   if(CacheHelper.getData(key: 'uId')!=null){
     uId=CacheHelper.getData(key: 'uId');
   }
+  if(CacheHelper.getData(key: 'admin')!=null){
+    isAdmin=CacheHelper.getData(key: 'admin');
+  }
+
   await Firebase.initializeApp(
     // options:  FirebaseOptions(
     //   apiKey: 'AIzaSyAsNOLf5LmI1qFybvPaHFT7LEFFdPnbYMk',

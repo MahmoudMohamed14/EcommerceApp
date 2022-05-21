@@ -131,6 +131,8 @@ class AddProductScreen extends StatelessWidget {
                       if(s!.isEmpty){
 
                         return'Old Price Empty';
+                      }else if(double.parse(s)<double.parse(priceController.text)){
+                        return 'Old price is less than current price';
                       }
                       return null;
 
