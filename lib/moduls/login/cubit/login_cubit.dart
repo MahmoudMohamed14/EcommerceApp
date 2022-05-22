@@ -1,11 +1,13 @@
 
 
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:projectgraduate/models/user_model.dart';
 import 'package:projectgraduate/shared/constant/data_shared.dart';
 import 'package:projectgraduate/shared/network/local/cache_helper.dart';
 
@@ -27,6 +29,24 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginPasswordState());
 
   }
+  getUserData(id){
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(id).get().then((value) {
+
+
+      CacheHelper.putData(key: 'admin', value: value.data()!['isAdmin']);
+
+
+      emit(GetUserDataSuccessState());
+
+      print(value.data()!['name']);
+
+    }).catchError((onError){
+      emit(GetUserDataErrorState());
+    });
+
+  }
 
   void login({
     required String password,
@@ -36,7 +56,9 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginLoadingState());
 
     FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password).then((value) {
+     getUserData(value.user!.uid);
       CacheHelper.putData(key: 'uId', value: value.user!.uid);
+
       uId=value.user!.uid;
 
 

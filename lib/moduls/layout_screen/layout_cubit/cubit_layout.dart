@@ -176,7 +176,7 @@ class CubitLayout extends Cubit<StateLayout> {
     collection('Products')
         .get()
         .then((value) {
-          if(isAdmin){
+          if(CacheHelper.getData(key: 'admin')){
             value.docs.forEach((element) {
               print(element.data()['old_Price']);
               if(element.data()['adminId']==uId){
@@ -323,7 +323,7 @@ class CubitLayout extends Cubit<StateLayout> {
         collection('Category')
         .get()
         .then((value) {
-      if(isAdmin){
+      if(CacheHelper.getData(key: 'admin')){
         value.docs.forEach((element) {
           print(element.data()['old_Price']);
           if(element.data()['adminId']==uId){
@@ -333,6 +333,7 @@ class CubitLayout extends Cubit<StateLayout> {
         });
       }else{
         value.docs.forEach((element) {
+          print('hajyg');
           print(element.data()['old_Price']);
           listAllCategory!.add(CategoryModel.fromJson(element.data()));
 
@@ -371,9 +372,9 @@ class CubitLayout extends Cubit<StateLayout> {
         .collection('users')
         .doc(uId).get().then((value) {
           myData=UsersModel.fromJson(json: value.data()!);
-          if( CacheHelper.getData(key: 'admin')==null) {
+
             CacheHelper.putData(key: 'admin', value: value.data()!['isAdmin']);
-          }
+
 
           emit(GetUserDataSuccessState());
 
@@ -420,40 +421,60 @@ class CubitLayout extends Cubit<StateLayout> {
 
   }
   void getToCart(){
-
-   List listt=[];
-   listCartModel=[];
+    emit(GetCartLoadingState ());
     FirebaseFirestore.instance
         .collection('users')
-        .doc(uId!).collection('cart').doc('mycart').get().then((value) {
-          if(value.data()==null||value.data()!['cart']==null){
-            FirebaseFirestore.instance
-                .collection('users')
-                .doc(uId!).collection('cart').doc("mycart").set({'cart':[]});
+        .doc(uId!).collection('cart').doc('mycart').snapshots().listen((event) {
+      List listCart=[];
+      listCartModel=[];
+
+      if(event.data()==null||event.data()!['cart']==null){
+                FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(uId!).collection('cart').doc("mycart").set({'cart':[]});
 
 
-          }else{
-            listt=value.data()!['cart'];
-            listt.forEach((element) {
-              listCartModel.add(CartModel.fromJson(element));
+              }else {
+        listCart = event.data()!['cart'];
+        listCart.forEach((element) {
+          listCartModel.add(CartModel.fromJson(element));
+        });
+        print(listCart);
 
 
-            });
-            print(listt);
+        emit(GetCartSuccessState());
+      }
 
-
-            emit( GetCartSuccessState());
-
-          }
-
-
-
-    }).catchError((onError){
-      print(onError.toString());
-
-      emit( GetCartErrorState());
-
-    });
+     });
+      // .then((value) {
+    //       if(value.data()==null||value.data()!['cart']==null){
+    //         FirebaseFirestore.instance
+    //             .collection('users')
+    //             .doc(uId!).collection('cart').doc("mycart").set({'cart':[]});
+    //
+    //
+    //       }else{
+    //         listCart=value.data()!['cart'];
+    //         listCart.forEach((element) {
+    //           listCartModel.add(CartModel.fromJson(element));
+    //
+    //
+    //         });
+    //         print(listCart);
+    //
+    //
+    //         emit( GetCartSuccessState());
+    //
+    //       }
+    //
+    //
+    //
+    // }).catchError((onError){
+    //   print(onError.toString());
+    //
+    //   emit( GetCartErrorState());
+    //
+    // });
 
   }
 
@@ -507,7 +528,6 @@ class CubitLayout extends Cubit<StateLayout> {
   void emitFunction() {
     emit(EmitToRebuildState());
   }
-
   void deleteAllCart(){
     FirebaseFirestore.instance
         .collection('users')
@@ -545,7 +565,6 @@ class CubitLayout extends Cubit<StateLayout> {
   List<OrderModel>listPendingOrder=[];
   List<OrderModel>listCancelOrder=[];
   List<OrderModel>listDoneOrder=[];
-
   void getAllOrder(){
     listPendingOrder=[];
     listCancelOrder=[];
@@ -600,7 +619,6 @@ class CubitLayout extends Cubit<StateLayout> {
 
 
   }
-
   void  cancelOrder(String id){
     FirebaseFirestore.instance
         .collection('order')
@@ -641,6 +659,7 @@ class CubitLayout extends Cubit<StateLayout> {
 
     });
   }
+
 
 
 }

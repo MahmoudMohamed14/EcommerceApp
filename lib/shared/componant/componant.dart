@@ -174,6 +174,7 @@ Color toastColor({
   }
   return color;
 }
+
 void signOut( context,widget) {
 
 

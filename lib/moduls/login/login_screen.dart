@@ -33,6 +33,7 @@ class LoginScreen extends StatelessWidget {
           listener: (context,state){
             if(state is LoginSuccessState){
 
+              CubitLayout.get(context).getUserData();
               CubitLayout.get(context).init();
 
                navigateAndFinish(context, LayoutScreen());

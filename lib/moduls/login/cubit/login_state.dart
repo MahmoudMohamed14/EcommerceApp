@@ -15,3 +15,5 @@ class LoginErrorState extends LoginState{
 
 class GetClassNameSuccessState extends LoginState{}
 class GetClassNameErrorState extends LoginState{}
+class GetUserDataSuccessState extends LoginState{}
+class GetUserDataErrorState extends LoginState{}

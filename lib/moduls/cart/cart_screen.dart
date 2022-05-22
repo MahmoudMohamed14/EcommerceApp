@@ -140,6 +140,8 @@ class CartScreen extends StatelessWidget {
                         SizedBox(width: 20,),
                         GestureDetector(
                           onTap: (){
+
+
                           CubitLayout.get(context).updateToCart(
                               CartModel(
                                   id: cartModel.id
