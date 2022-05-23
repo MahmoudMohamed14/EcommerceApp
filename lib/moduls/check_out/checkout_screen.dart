@@ -58,24 +58,26 @@ class CheckOutScreen extends StatelessWidget {
                   defaultButton(onPress: (){
                     if(keyForm.currentState!.validate()){
 
-                      cubit.addOrder(
-                          OrderModel(
-                              time: TimeOfDay.now().format(context),
-                              customerId: cubit.myData!.id,
-                              customerName: cubit.myData!.name,
-                              customerNote: notesController.text,
-                              customerPhone: cubit.myData!.phone,
-                              customerTitle: titleController.text,
-                              date: DateFormat.yMMMd().format(DateTime.now()),
-                              orderId: cubit.getRandomString(5).toLowerCase(),
-                              orderProducts: cubit.listProductOfOrder,
-                              totalPrice: cubit.calculateTotalCheck().toString()
+                     String id= cubit.getRandomString(5).toLowerCase();
+                     cubit.addOrder(
+                         OrderModel(
+                           time: TimeOfDay.now().format(context),
+                           totalPrice: cubit.calculateTotalCheck().toString(),
+                           customerId: cubit.myData!.id,
+                           customerName: cubit.myData!.name,
+                           customerNote: notesController.text,
+                           customerPhone: cubit.myData!.phone,
+                           customerTitle: titleController.text,
+                           date: DateFormat.yMMMd().format(DateTime.now()),
+                           orderId:id,
+                           listAdminId: cubit.listAdmin.toSet().toList(),
 
 
-                          )
+                           orderProducts: cubit.listProductOfOrder,
+                           //
 
-                      );
 
+                         ));
                     }
 
 

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/cubit_layout.dart';
+import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
 import 'package:projectgraduate/shared/constant/data_shared.dart';
 
 import 'bloc_observer.dart';
@@ -54,35 +55,42 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<CubitLayout>(create: (context)=>CubitLayout()..getProducts()..changeBottomNav(index: 1)..getCategory()..getUserData()..getToCart()..getAllOrder()),
       ],
-      child: MaterialApp(
 
-        debugShowCheckedModeBanner: false,
-        theme:getApplicationTheme(context),
-        supportedLocales:const [
-          Locale('en',),
-          Locale('ar'),
-        ],
-        locale: const Locale("en") ,
+      child: BlocConsumer<CubitLayout,StateLayout>(
+        listener: (context,stste){},
+        builder: (context,stste){
+          return MaterialApp(
 
-        localizationsDelegates: const[
-          AppLocale.delegate,
-            GlobalMaterialLocalizations.delegate,
-           GlobalWidgetsLocalizations.delegate,
-           GlobalCupertinoLocalizations.delegate,
+            debugShowCheckedModeBanner: false,
+            theme:getApplicationTheme(context),
+            supportedLocales:const [
+              Locale('en',),
+              Locale('ar'),
+            ],
+            locale: const Locale("en") ,
 
-        ],
-        localeResolutionCallback: (currentLang,supportedLang){
-          if(currentLang!=null){
-            for(Locale local in supportedLang){
-              if(local.languageCode==currentLang.languageCode){
-                return currentLang;
+            localizationsDelegates: const[
+              AppLocale.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+
+            ],
+            localeResolutionCallback: (currentLang,supportedLang){
+              if(currentLang!=null){
+                for(Locale local in supportedLang){
+                  if(local.languageCode==currentLang.languageCode){
+                    return currentLang;
+                  }
+                }
+
               }
-            }
-
-          }
-          return supportedLang.first;
+              return supportedLang.first;
+            },
+            home: launcherScreen(iscurrentuser: FirebaseAuth.instance.currentUser!=null,loginScreen: LoginScreen(), homeScreen: LayoutScreen()),
+          );
         },
-        home: launcherScreen(iscurrentuser: FirebaseAuth.instance.currentUser!=null,loginScreen: LoginScreen(), homeScreen: LayoutScreen()),
+
       ),
     );
   }

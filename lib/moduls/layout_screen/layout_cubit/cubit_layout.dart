@@ -372,8 +372,11 @@ class CubitLayout extends Cubit<StateLayout> {
         .collection('users')
         .doc(uId).get().then((value) {
           myData=UsersModel.fromJson(json: value.data()!);
-
+          if(CacheHelper.getData(key:'admin')==null){
             CacheHelper.putData(key: 'admin', value: value.data()!['isAdmin']);
+          }
+
+
 
 
           emit(GetUserDataSuccessState());
@@ -420,6 +423,7 @@ class CubitLayout extends Cubit<StateLayout> {
     });
 
   }
+  List<String>listAdmin=[];
   void getToCart(){
     emit(GetCartLoadingState ());
     FirebaseFirestore.instance
@@ -427,6 +431,7 @@ class CubitLayout extends Cubit<StateLayout> {
         .doc(uId!).collection('cart').doc('mycart').snapshots().listen((event) {
       List listCart=[];
       listCartModel=[];
+      listAdmin=[];
 
       if(event.data()==null||event.data()!['cart']==null){
                 FirebaseFirestore.instance
@@ -436,10 +441,17 @@ class CubitLayout extends Cubit<StateLayout> {
 
               }else {
         listCart = event.data()!['cart'];
+
         listCart.forEach((element) {
+
           listCartModel.add(CartModel.fromJson(element));
+          if(element['adminId']!=null)
+          listAdmin.add(element['adminId']);
+
         });
         print(listCart);
+
+        print('list admin${listAdmin.toSet().toList()}');
 
 
         emit(GetCartSuccessState());
@@ -557,11 +569,13 @@ class CubitLayout extends Cubit<StateLayout> {
           emit(AddOrderSuccessState ());
     })
         .catchError((onError){
+          print('order error '+onError.toString());
       emit(AddOrderErrorState ());
     });
 
 
   }
+  List<dynamic> admin=[];
   List<OrderModel>listPendingOrder=[];
   List<OrderModel>listCancelOrder=[];
   List<OrderModel>listDoneOrder=[];
@@ -569,6 +583,7 @@ class CubitLayout extends Cubit<StateLayout> {
     listPendingOrder=[];
     listCancelOrder=[];
     listDoneOrder=[];
+    admin=[];
 
     emit(GetOrderLoadingState());
     FirebaseFirestore.instance
@@ -577,11 +592,23 @@ class CubitLayout extends Cubit<StateLayout> {
         .then((value) {
           value.docs.forEach((element) {
             if(element.data()['orderState']=='Pending') {
+              admin= element.data()['listAdminId']  ;
+              print(" admin ${list}");
 
               if(CacheHelper.getData(key: 'admin')){
-                listPendingOrder.add(OrderModel.fromJson(element.data()));
+
+              admin.forEach((admin) {
+                if(admin==uId){
+                  listPendingOrder.add(OrderModel.fromJson(element.data()));
+                }
+
+              });
+
+
+
+
               }else {
-                if(element.data()['customerId']==myData!.id){
+                if(element.data()['customerId']==uId){
                   listPendingOrder.add(OrderModel.fromJson(element.data()));
                 }
               }

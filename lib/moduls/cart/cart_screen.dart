@@ -125,7 +125,9 @@ class CartScreen extends StatelessWidget {
                                     ,name: cartModel.name,
                                     price: cartModel.price,
                                     image: cartModel.image,
-                                    quantity: cartModel.quantity-1
+                                    quantity: cartModel.quantity-1,
+                                  adminId: cartModel.adminId
+
                                 ), index);
                             }
                           } ,
@@ -148,7 +150,8 @@ class CartScreen extends StatelessWidget {
                               ,name: cartModel.name,
                                 price: cartModel.price,
                                 image: cartModel.image,
-                                quantity: cartModel.quantity+1
+                                quantity: cartModel.quantity+1,
+                                  adminId: cartModel.adminId
                           ), index);
 
                           },

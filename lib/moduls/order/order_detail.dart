@@ -13,11 +13,11 @@ import 'package:projectgraduate/shared/constant/fonst_manager.dart';
 import 'package:projectgraduate/shared/constant/icon_broken.dart';
 import 'package:projectgraduate/shared/constant/test_styles_manager.dart';
 import 'package:projectgraduate/shared/constant/values_manager.dart';
+import 'package:projectgraduate/shared/network/local/cache_helper.dart';
 
 class OrderDetails extends StatelessWidget {
   OrderModel? orderModel;
   List<CartModel>listcat=[];
-
 
   OrderDetails({this.orderModel});
 
@@ -25,7 +25,17 @@ class OrderDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     orderModel!.orderProducts!.forEach((element) {
-     listcat.add(CartModel.fromJson(element));
+      if(CacheHelper.getData(key: 'admin')){
+        if(element['adminId']==CacheHelper.getData(key: 'uId')){
+          listcat.add(CartModel.fromJson(element));
+        }
+
+
+      }else{
+        listcat.add(CartModel.fromJson(element));
+      }
+
+
     });
     return BlocConsumer<CubitLayout,StateLayout>(
         listener: (context,state){
@@ -69,7 +79,7 @@ class OrderDetails extends StatelessWidget {
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context,index)=>productOrderBuildItem(context,listcat[index]),
                   separatorBuilder: (context,index)=>SizedBox(height: AppSize.s10,),
-                  itemCount: orderModel!.orderProducts!.length),
+                  itemCount:listcat.length),
               SizedBox(height: 20,),
               //total price
               Row(

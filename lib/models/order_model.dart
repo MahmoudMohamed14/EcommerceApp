@@ -4,6 +4,7 @@ class OrderModel{
 
   dynamic totalPrice;
   List<dynamic>? orderProducts;
+  List<dynamic>?listAdminId;
   List<CartModel>?lisCartModel;
   String?customerId;
   String?orderId;
@@ -19,6 +20,7 @@ class OrderModel{
   OrderModel(
       {this.totalPrice,
       this.orderProducts,
+        this.listAdminId,
         this.orderId,
       this.customerId,
       this.customerName,
@@ -41,6 +43,7 @@ class OrderModel{
     customerNote=json['customerNote'];
     date=json['date'];
     time=json['time'];
+    listAdminId=json['listAdminId'];
 
 
 
@@ -60,7 +63,8 @@ class OrderModel{
       "customerTitle":customerTitle,
       "customerNote":customerNote,
       "date":date,
-      "time":time
+      "time":time,
+      "listAdminId":listAdminId
     };
 
   }

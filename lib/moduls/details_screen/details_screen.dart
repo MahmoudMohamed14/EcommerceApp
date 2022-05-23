@@ -228,7 +228,9 @@ class DetailsScreen extends StatelessWidget {
                       cubit.addToCart(CartModel(image: productModel!.image,
                           name:  productModel!.name,
                           price:  productModel!.price,
-                          id:  productModel!.id
+                          id:  productModel!.id,
+                        adminId: productModel!.adminId,
+
                       ));
                     }
 
@@ -237,7 +239,8 @@ class DetailsScreen extends StatelessWidget {
                   cubit.addToCart(CartModel(image: productModel!.image,
                       name:  productModel!.name,
                     price:  productModel!.price,
-                    id:  productModel!.id
+                    id:  productModel!.id,
+                    adminId: productModel!.adminId,
                   ));}
                   // cubit.getToCart();
 

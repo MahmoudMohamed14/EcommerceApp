@@ -5,6 +5,7 @@ class CartModel{
   String?id;
   String ?name;
   String ?image;
+  String ?adminId;
 
 
 
@@ -12,7 +13,7 @@ class CartModel{
       {
         this.price,
         this.quantity=1,
-
+        this.adminId,
         this.id,
         this.name,
         this.image,
@@ -22,27 +23,21 @@ class CartModel{
     id=json['id'];
     price=json['price'];
     quantity =json['quantity'];
-
+    adminId=json['adminId'];
     name=json['name'];
     image=json['image'];
-
-
-
-
-
   }
   Map<String,dynamic> toMap(){
     return {
       "name":name,
       "price":price,
       "quantity":quantity,
-
+      "adminId":adminId,
       "id":id,
       "image":image,
 
     };
 
   }
-
 
 }

@@ -1,18 +1,12 @@
 
-
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:projectgraduate/models/user_model.dart';
 import 'package:projectgraduate/shared/constant/data_shared.dart';
 import 'package:projectgraduate/shared/network/local/cache_helper.dart';
-
 import 'login_state.dart';
-
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginInitState());
 
@@ -34,20 +28,17 @@ class LoginCubit extends Cubit<LoginState> {
         .collection('users')
         .doc(id).get().then((value) {
 
-
       CacheHelper.putData(key: 'admin', value: value.data()!['isAdmin']);
 
 
-      emit(GetUserDataSuccessState());
+      emit(LoginSuccessState( ));
 
       print(value.data()!['name']);
 
     }).catchError((onError){
       emit(GetUserDataErrorState());
     });
-
   }
-
   void login({
     required String password,
     required String email,
@@ -57,6 +48,7 @@ class LoginCubit extends Cubit<LoginState> {
 
     FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password).then((value) {
      getUserData(value.user!.uid);
+     uId=value.user!.uid;
       CacheHelper.putData(key: 'uId', value: value.user!.uid);
 
       uId=value.user!.uid;
@@ -64,7 +56,7 @@ class LoginCubit extends Cubit<LoginState> {
 
 
 
-      emit(LoginSuccessState(uId:value.user!.uid  ));
+
     }).catchError((error){
       print('error Login'+error.toString());
       emit(LoginErrorState(error: error.toString()));
