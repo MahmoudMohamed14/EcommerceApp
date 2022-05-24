@@ -704,16 +704,32 @@ class CubitLayout extends Cubit<StateLayout> {
 
             }
            else if(element.data()['orderState']=='Cancel'){
+              admin= element.data()['listAdminId']  ;
               if(CacheHelper.getData(key: 'admin')){
-                listCancelOrder.add(OrderModel.fromJson(element.data()));
+
+                admin.forEach((admin) {
+                  if(admin==uId){
+                    listCancelOrder.add(OrderModel.fromJson(element.data()));
+                  }
+
+                });
+
               }else {
                 if(element.data()['customerId']==uId){
                  listCancelOrder.add(OrderModel.fromJson(element.data()));
                 }
               }
             }else{
+              admin= element.data()['listAdminId']  ;
+
               if(CacheHelper.getData(key: 'admin')){
-               listDoneOrder.add(OrderModel.fromJson(element.data()));
+                admin.forEach((admin) {
+                  if(admin==uId){
+                    listCancelOrder.add(OrderModel.fromJson(element.data()));
+                  }
+
+                });
+
               }else {
                 if(element.data()['customerId']==uId){
                   listDoneOrder.add(OrderModel.fromJson(element.data()));
