@@ -112,6 +112,8 @@ class Register extends StatelessWidget {
                             validat: (s){
                               if(s!.isEmpty){
                                 return'${getLang(context, "phone_empty")}';
+                              }else if(s.length<11){
+                                return'Must less than 11 number';
                               }
                               return null;
 
@@ -175,7 +177,7 @@ class Register extends StatelessWidget {
 
                           if(keyForm.currentState!.validate()){
 
-                              cubit.registerUser(name: name.text, email: email.text, password: password.text,isAdmin: cubit.isAdmin!,phone: phone.text);
+                              cubit.registerUser(name: name.text, email: email.text, password: password.text,isAdmin: cubit.isAdmin!,phone: phone.text,requestAdmin:cubit.isAdmin );
 
                           }else{
 

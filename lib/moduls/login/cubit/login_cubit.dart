@@ -29,6 +29,10 @@ class LoginCubit extends Cubit<LoginState> {
         .doc(id).get().then((value) {
 
       CacheHelper.putData(key: 'admin', value: value.data()!['isAdmin']);
+      if(value.data()!['requestAdmin']!=null) requestAdmin=value.data()!['requestAdmin'];
+
+      if(value.data()!['superAdmin']!=null) superAdmin=value.data()!['superAdmin'];
+
 
 
       emit(LoginSuccessState( ));

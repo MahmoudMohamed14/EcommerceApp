@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:projectgraduate/shared/constant/data_shared.dart';
 import 'package:projectgraduate/shared/network/local/cache_helper.dart';
 
 import '../constant/color_manager.dart';
@@ -14,6 +15,8 @@ Widget defaultButton(
       required Function onPress,
       required String name,
       double width=double.infinity,
+      Color color = const Color(0xffED9728)
+
 
 
 
@@ -22,7 +25,7 @@ Widget defaultButton(
     )=>Container(
   decoration:BoxDecoration(
       borderRadius: BorderRadius.circular(20),
-      color: ColorManager.primary
+      color: color
 
 
 
@@ -181,6 +184,8 @@ void signOut( context,widget) {
   FirebaseAuth.instance.signOut().then((value) {
    CacheHelper.removeWithKey(key: 'uId');
    CacheHelper.removeWithKey(key: 'admin');
+   requestAdmin=false;
+   superAdmin=null;
     navigateAndFinish(context, widget);
   });
 

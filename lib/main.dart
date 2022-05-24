@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<CubitLayout>(create: (context)=>CubitLayout()..getProducts()..changeBottomNav(index: 1)..getCategory()..getUserData()..getToCart()..getAllOrder()),
+        BlocProvider<CubitLayout>(create: (context)=>CubitLayout()..getAllUser()..getProducts()..changeBottomNav(index: 1)..getCategory()..getUserData()..getToCart()..getAllOrder()),
       ],
 
       child: BlocConsumer<CubitLayout,StateLayout>(

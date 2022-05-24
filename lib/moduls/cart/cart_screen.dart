@@ -1,3 +1,4 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:projectgraduate/models/cart_model.dart';
@@ -27,36 +28,40 @@ class CartScreen extends StatelessWidget {
       },
       builder: (context, state) {
         var cubit = CubitLayout.get(context);
-        return Padding(
-          padding: const EdgeInsets.all(AppPadding.p20),
-          child:Column(
-            children: [
-              Expanded(
-                child: ListView.separated(itemBuilder: (context,index){
-                  return  buildCartItem(context, index,cubit.listCartModel[index]);
-                }
-                    , separatorBuilder: (context,index){return const SizedBox(height: 20,);},
-                    itemCount: cubit.listCartModel.length),
-              ),
-            if(cubit.listCartModel.length >0)  Row(
+        return ConditionalBuilder(
+          condition: cubit.listCartModel.isNotEmpty&&cubit.listCartModel !=null,
+          builder: (context)=>Padding(
+            padding: const EdgeInsets.all(AppPadding.p20),
+            child:Column(
+              children: [
+                Expanded(
+                  child: ListView.separated(itemBuilder: (context,index){
+                    return  buildCartItem(context, index,cubit.listCartModel[index]);
+                  }
+                      , separatorBuilder: (context,index){return const SizedBox(height: 20,);},
+                      itemCount: cubit.listCartModel.length),
+                ),
+                if(cubit.listCartModel.length >0)  Row(
 
-                children: [
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Text("Total: ",style: Theme.of(context).textTheme.headline1,),
-                        Text("${cubit.calculateTotalCheck()}",style: Theme.of(context).textTheme.headline2,)
-                      ],
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Text("Total: ",style: Theme.of(context).textTheme.headline1,),
+                          Text("${cubit.calculateTotalCheck()}",style: Theme.of(context).textTheme.headline2,)
+                        ],
+                      ),
                     ),
-                  ),
-                  Expanded(child: defaultButton(onPress: (){
+                    Expanded(child: defaultButton(onPress: (){
 
-                   navigateTo(context, CheckOutScreen());
-                  }, name: 'check out'))
-                ],
-              )
-            ],
+                      navigateTo(context, CheckOutScreen());
+                    }, name: 'check out'))
+                  ],
+                )
+              ],
+            ),
           ),
+         fallback: (context)=> state is GetCartLoadingState?const Center(child: CircularProgressIndicator()): Center(child: Text('No Item Cart',style: Theme.of(context).textTheme.headline2,)) ,
         );
       },
 

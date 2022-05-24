@@ -12,6 +12,7 @@ import 'package:projectgraduate/shared/constant/fonst_manager.dart';
 import 'package:projectgraduate/shared/constant/test_styles_manager.dart';
 import 'package:projectgraduate/shared/constant/values_manager.dart';
 import 'package:projectgraduate/shared/language/applocale.dart';
+import 'package:projectgraduate/shared/network/local/cache_helper.dart';
 
 class DetailsScreen extends StatelessWidget {
   ProductModel ?productModel;
@@ -210,7 +211,7 @@ class DetailsScreen extends StatelessWidget {
                 ),
               ),
 
-              Padding(
+            CacheHelper.getData(key: 'admin')? SizedBox(): Padding(
                 padding: const EdgeInsets.all(20),
                 child: defaultButton(onPress: (){
                  cubit.counteraddToCart=0;

@@ -1,3 +1,4 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:projectgraduate/models/category_model.dart';
@@ -108,9 +109,14 @@ class CategoriesScreen extends StatelessWidget {
 
           ],
         ),
-          body: Padding(
-            padding: const EdgeInsets.all(20),
-            child: HomeScreen.buildGridProduct(cubit.getCategoryList(categoryName: categoryModel!.category), context),
+          body: ConditionalBuilder(
+            condition:cubit.getCategoryList(categoryName: categoryModel!.category).isNotEmpty,
+
+            builder: (context)=>Padding(
+          padding: const EdgeInsets.all(20),
+          child: HomeScreen.buildGridProduct(cubit.getCategoryList(categoryName: categoryModel!.category), context),
+        ),
+            fallback: (context)=> Center(child: Text('No Item Product',style: Theme.of(context).textTheme.headline2,)),
           ),
         );},
 

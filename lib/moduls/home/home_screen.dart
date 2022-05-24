@@ -3,16 +3,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:projectgraduate/models/category_model.dart';
+import 'package:projectgraduate/moduls/addProduct/addproduct_screen.dart';
 import 'package:projectgraduate/moduls/add_category/add_category_screen.dart';
 import 'package:projectgraduate/moduls/category_screen/category_screen.dart';
 import 'package:projectgraduate/moduls/details_screen/details_screen.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/cubit_layout.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
 import 'package:projectgraduate/shared/componant/componant.dart';
+import 'package:projectgraduate/shared/constant/data_shared.dart';
 
 import 'package:projectgraduate/shared/constant/fonst_manager.dart';
 import 'package:projectgraduate/shared/constant/icon_broken.dart';
 import 'package:projectgraduate/shared/constant/test_styles_manager.dart';
+import 'package:projectgraduate/shared/network/local/cache_helper.dart';
 
 
 import '../../models/product_model.dart';
@@ -26,104 +29,128 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CubitLayout,StateLayout>(
-      listener: (context,stare){},
-      builder:(context,stare){
+      listener: (context,state){},
+      builder:(context,state){
         var cubit=CubitLayout.get(context);
-        return SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                defaultEditText(control: searchController,
-                    label: 'Search',prefIcon: IconBroken.Search,
-                    validat: (s){},onchange: (value){
-                    //  cubit.listProductSearch =  cubit.listAllProduct!.where((element) => element.name!.toLowerCase().contains(value.toLowerCase())).toList();
+        return ConditionalBuilder(
+          condition: cubit.listAllCategory!.isNotEmpty&cubit.listAllProduct!.isNotEmpty,
+          builder: (context)=>SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  defaultEditText(control: searchController,
+                      label: 'Search',prefIcon: IconBroken.Search,
+                      validat: (s){},onchange: (value){
+                        //  cubit.listProductSearch =  cubit.listAllProduct!.where((element) => element.name!.toLowerCase().contains(value.toLowerCase())).toList();
 
-                    cubit.search(value);
-                }),
-                const  SizedBox(height: AppSize.s20,),
-                Text('Categories',style:getSemiBoldStyle(color: ColorManager.darkGrey,fontSize: FontSize.s20)),
-              const  SizedBox(height: AppSize.s20,),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                   ConditionalBuilder(
-                     condition: cubit.myData !=null&&cubit.myData!.isAdmin!,
-                     builder: (context)=>InkWell(
-                       onTap: (){
-                         navigateTo(context, AddCategoryScreen());
+                        cubit.search(value);
+                      }),
+                  const  SizedBox(height: AppSize.s20,),
+                  Text('Categories',style:getSemiBoldStyle(color: ColorManager.darkGrey,fontSize: FontSize.s20)),
+                  const  SizedBox(height: AppSize.s20,),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        ConditionalBuilder(
+                          condition: cubit.myData !=null&&cubit.myData!.isAdmin!,
+                          builder: (context)=>InkWell(
+                            onTap: (){
+                              navigateTo(context, AddCategoryScreen());
 
-                       },
-                       child: Container(
-                         decoration: BoxDecoration(
-                             border: Border.all(color: ColorManager.lightPrimary),
-                           borderRadius: BorderRadius.circular(20),
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: ColorManager.lightPrimary),
+                                borderRadius: BorderRadius.circular(20),
 
-                         ),
-                         height: AppSize.s100,
-                         width: AppSize.s100,
-                         child: Column(
-                           mainAxisAlignment: MainAxisAlignment.center,
-                           children: [
-                             Icon(IconBroken.Plus,size: AppSize.s40,),
-                             Text("Add Category")
+                              ),
+                              height: AppSize.s100,
+                              width: AppSize.s100,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(IconBroken.Plus,size: AppSize.s40,),
+                                  Text("Add Category")
 
-                           ],
-                         ),
-                       ),
-                     ),
-                     fallback: ((context)=>SizedBox()),
+                                ],
+                              ),
+                            ),
+                          ),
+                          fallback: ((context)=>SizedBox()),
 
 
-                   ),
-                      // InkWell(
-                      //   onTap: (){
-                      //     navigateTo(context, AddCategoryScreen());
-                      //
-                      //   },
-                      //   child: Container(
-                      //     decoration: BoxDecoration(
-                      //         border: Border.all(color: ColorManager.lightPrimary)
-                      //     ),
-                      //     height: AppSize.s100,
-                      //     width: AppSize.s100,
-                      //     child: Column(
-                      //       mainAxisAlignment: MainAxisAlignment.center,
-                      //       children: [
-                      //         Icon(IconBroken.Plus,size: AppSize.s40,),
-                      //         Text("Add Category")
-                      //
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
+                        ),
+                        // InkWell(
+                        //   onTap: (){
+                        //     navigateTo(context, AddCategoryScreen());
+                        //
+                        //   },
+                        //   child: Container(
+                        //     decoration: BoxDecoration(
+                        //         border: Border.all(color: ColorManager.lightPrimary)
+                        //     ),
+                        //     height: AppSize.s100,
+                        //     width: AppSize.s100,
+                        //     child: Column(
+                        //       mainAxisAlignment: MainAxisAlignment.center,
+                        //       children: [
+                        //         Icon(IconBroken.Plus,size: AppSize.s40,),
+                        //         Text("Add Category")
+                        //
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
 
-                      SizedBox(width: AppSize.s10,),
+                        SizedBox(width: AppSize.s10,),
 
-                      Container(
-                        height: 100,
-                        child: ListView.separated(
-                            scrollDirection:Axis.horizontal ,
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (context,index)=>buildCategoryItem(context,CubitLayout.get(context).listAllCategory![index]),
-                            separatorBuilder:(context,index)=>SizedBox(width: 10,),
-                            itemCount: CubitLayout.get(context).listAllCategory!.length),
-                      ),
-                    ],
+                        Container(
+                          height: 100,
+                          child: ListView.separated(
+                              scrollDirection:Axis.horizontal ,
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context,index)=>buildCategoryItem(context,CubitLayout.get(context).listAllCategory![index]),
+                              separatorBuilder:(context,index)=>SizedBox(width: 10,),
+                              itemCount: CubitLayout.get(context).listAllCategory!.length),
+                        ),
+                      ],
+                    ),
+
                   ),
+                  const  SizedBox(height: AppSize.s20,),
+                  Text('Products',style:getSemiBoldStyle(color: ColorManager.darkGrey,fontSize: FontSize.s20)),
+                  const  SizedBox(height: AppSize.s20,),
 
-                ),
-                const  SizedBox(height: AppSize.s20,),
-                Text('Products',style:getSemiBoldStyle(color: ColorManager.darkGrey,fontSize: FontSize.s20)),
-              const  SizedBox(height: AppSize.s20,),
-
-                buildGridProduct(searchController.text.isNotEmpty?cubit.listProductSearch:cubit.listAllProduct!,context),
-              ],
+                  buildGridProduct(searchController.text.isNotEmpty?cubit.listProductSearch:cubit.listAllProduct!,context),
+                ],
+              ),
             ),
           ),
+          fallback:(context)=> state is GetProductLoadingState ||state is GetCategoryLoadingState?const Center(child: CircularProgressIndicator()):CacheHelper.getData(key: 'admin')?
+          ( requestAdmin? Center(child: Text('Wait until your request accepted',style: Theme.of(context).textTheme.headline2,)) :Center(child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+            Text('No Product add',style: Theme.of(context).textTheme.headline2,),
+            SizedBox(height: 20,),
+            TextButton(onPressed: (){
+              navigateTo(context, AddCategoryScreen());
+            }, child: Text('Add Category',style: Theme.of(context).textTheme.headline1,)),
+
+            Text('Or',style: Theme.of(context).textTheme.headline2,),
+
+            TextButton(onPressed: (){
+              navigateTo(context, AddProductScreen());
+
+            }, child: Text('Add Product',style: Theme.of(context).textTheme.headline1,)),
+
+          ],))): Center(child: Text('No item product',style: Theme.of(context).textTheme.headline2,)),
+
+
+
         );
       } ,
 

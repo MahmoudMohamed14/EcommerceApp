@@ -33,6 +33,14 @@ class GetCategorySuccessState extends StateLayout{}
 class GetCategoryLoadingState extends StateLayout{}
 class GetUserDataErrorState extends StateLayout{}
 class GetUserDataSuccessState extends StateLayout{}
+class GetAllUserSuccessState extends StateLayout{}
+class GetAllUserLoadingState extends StateLayout{}
+class AcceptAdminErrorState extends StateLayout{}
+class AcceptAdminSuccessState extends StateLayout{}
+class CancelAdminErrorState extends StateLayout{}
+class CancelAdminSuccessState extends StateLayout{}
+class UpdateUserErrorState extends StateLayout{}
+class UpdateUserSuccessState extends StateLayout{}
 class GetCartLoadingState extends StateLayout{}
 class GetCartErrorState extends StateLayout{}
 class GetCartSuccessState extends StateLayout{}

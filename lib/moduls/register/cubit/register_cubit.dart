@@ -33,6 +33,8 @@ class RegisterCubit extends Cubit<RegisterStates> {
     required String password,
     required  bool isAdmin,
     required String phone,
+    bool? requestAdmin,
+
 
   })async{
     emit(RegisterLoadingState());
@@ -45,11 +47,13 @@ class RegisterCubit extends Cubit<RegisterStates> {
           password: password,
           id: value.user!.uid,
           isAdmin:isAdmin,
-        phone: phone
+        phone: phone,
+        requestAdmin: requestAdmin
 
       );
       // if(CacheHelper.getData(key: 'email')==null)myEmail=email;
        CacheHelper.putData(key: 'uId', value: value.user!.uid);
+      CacheHelper.putData(key: 'admin', value: usersModel!.isAdmin);
        uId=value.user!.uid;
       createUser(usersModel: usersModel,);
 
@@ -71,6 +75,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
         .collection('users')
         .doc(usersModel!.id!)
         .set(usersModel.toMap()).then((value) {
+          requestAdmin=usersModel.isAdmin!;
 
 
       emit(CreateUserSuccessState( ));

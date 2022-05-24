@@ -20,7 +20,12 @@ import 'package:projectgraduate/moduls/home/home_screen.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
 
 import 'package:projectgraduate/moduls/order/order_screen.dart';
+import 'package:projectgraduate/moduls/profile/profile_screen.dart';
+import 'package:projectgraduate/moduls/request_admin/requestAdmin_screen.dart';
+import 'package:projectgraduate/shared/constant/color_manager.dart';
+
 import 'package:projectgraduate/shared/constant/data_shared.dart';
+import 'package:projectgraduate/shared/constant/icon_broken.dart';
 import 'package:projectgraduate/shared/network/local/cache_helper.dart';
 
 
@@ -30,8 +35,29 @@ class CubitLayout extends Cubit<StateLayout> {
   static CubitLayout get(context) {
     return BlocProvider.of(context);
   }
-  List<String>listTitle=['Order','Home','Card'];
-  List<Widget>listWidget=[OrderScreen(),HomeScreen(),CartScreen()];
+
+  List<String>listTitleSuper=['Order','Home','AdminRequest'];
+  List<Widget>listWidgetSuper=[OrderScreen(),HomeScreen(),RequestAdminScreen()];
+  List<Widget>listIconSuper=[
+    CircleAvatar(backgroundImage: AssetImage('assets/image/order.png'),radius: 22,),
+    Icon(IconBroken.Home, size: 35,color: ColorManager.white,),
+
+    Icon( IconBroken.Add_User, size: 35,color: ColorManager.white,),];
+  List<Widget>listIconAdmin=[
+    CircleAvatar(backgroundImage: AssetImage('assets/image/order.png'),radius: 22,),
+    Icon(IconBroken.Home, size: 35,color: ColorManager.white,),
+
+    Icon( IconBroken.Profile, size: 35,color: ColorManager.white,),];
+  List<Widget>listIconCustomer=[
+    CircleAvatar(backgroundImage: AssetImage('assets/image/order.png'),radius: 22,),
+    Icon(IconBroken.Home, size: 35,color: ColorManager.white,),
+
+    Icon( IconBroken.Buy, size: 35,color: ColorManager.white,),];
+
+  List<String>listTitleCustomer=['Order','Home','Cart'];
+  List<Widget>listWidgetCustomer=[OrderScreen(),HomeScreen(),CartScreen()];
+  List<String>listTitleAdmin=['Order','Home','Profile'];
+  List<Widget>listWidgetAdmin=[OrderScreen(),HomeScreen(),ProfileScreen()];
 
   int index = 1;
   void  changeBottomNav({required int index})
@@ -46,9 +72,11 @@ class CubitLayout extends Cubit<StateLayout> {
     getCategory();
     getProducts();
     changeBottomNav(index: 1);
-    getToCart();
+    if(CacheHelper.getData(key: 'uId')!=null) getToCart();
     getAllOrder();
+    getAllUser();
   }
+
   File? productImage;
 
   Future<void> getProductImage() async {
@@ -348,6 +376,7 @@ class CubitLayout extends Cubit<StateLayout> {
       emit(GetCategoryErrorState());
     });
   }
+  List<UsersModel>listAllUser=[];
 
   void deleteCategory({required String categoryId }){
 
@@ -366,6 +395,51 @@ class CubitLayout extends Cubit<StateLayout> {
       emit(DeleteCategoryErrorState());
     });
   }
+  void getAllUser(){
+
+    emit(GetAllUserLoadingState ());
+    FirebaseFirestore.instance
+        .collection('users').snapshots().listen((event) {
+          listAllUser=[];
+          event.docs.forEach((element) {
+            if(element.data()!=null){
+              if(element.data()['requestAdmin'] !=null){
+                if(element.data()['requestAdmin']){
+                  listAllUser.add(UsersModel.fromJson(json: element.data()));
+                }
+              }
+            }
+
+          });
+          emit( GetAllUserSuccessState ());
+    });
+
+  }
+  void acceptRequestAdmin({required String id}){
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(id).update({'requestAdmin':false}).then((value) {
+      getAllUser();
+      emit(AcceptAdminSuccessState());
+    })
+        .catchError((onError){
+          emit(AcceptAdminErrorState());
+
+    });
+  }
+  void cancelRequestAdmin({required String id}){
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(id).update({'requestAdmin':false,'isAdmin':false}).then((value) {
+      getAllUser();
+      emit(CancelAdminSuccessState());
+    })
+        .catchError((onError){
+      emit(CancelAdminErrorState());
+
+    });
+  }
+
   UsersModel? myData;
   void getUserData(){
     FirebaseFirestore.instance
@@ -375,6 +449,10 @@ class CubitLayout extends Cubit<StateLayout> {
           if(CacheHelper.getData(key:'admin')==null){
             CacheHelper.putData(key: 'admin', value: value.data()!['isAdmin']);
           }
+          if(value.data()!['requestAdmin']!=null) requestAdmin=value.data()!['requestAdmin'];
+
+          if(value.data()!['superAdmin']!=null) superAdmin=value.data()!['superAdmin'];
+
 
 
 
@@ -387,6 +465,18 @@ class CubitLayout extends Cubit<StateLayout> {
       emit(GetUserDataErrorState());
     });
 
+  }
+  void updateUser({name,phone}){
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId).update({'name':name,'phone':phone}).then((value) {
+      getUserData();
+      emit(UpdateUserSuccessState());
+    })
+        .catchError((onError){
+      emit(UpdateUserErrorState());
+
+    });
   }
 
   List<ProductModel> getCategoryList({String ?categoryName}) {
@@ -426,38 +516,35 @@ class CubitLayout extends Cubit<StateLayout> {
   List<String>listAdmin=[];
   void getToCart(){
     emit(GetCartLoadingState ());
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(uId!).collection('cart').doc('mycart').snapshots().listen((event) {
-      List listCart=[];
-      listCartModel=[];
-      listAdmin=[];
+    if(uId !=null) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(uId!).collection('cart').doc('mycart').snapshots().listen((event) {
+        List listCart = [];
+        listCartModel = [];
+        listAdmin = [];
 
-      if(event.data()==null||event.data()!['cart']==null){
-                FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(uId!).collection('cart').doc("mycart").set({'cart':[]});
+        if (event.data() == null || event.data()!['cart'] == null) {
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(uId!).collection('cart').doc("mycart").set({'cart': []});
+        } else {
+          listCart = event.data()!['cart'];
 
+          listCart.forEach((element) {
+            listCartModel.add(CartModel.fromJson(element));
+            if (element['adminId'] != null)
+              listAdmin.add(element['adminId']);
+          });
+          print(listCart);
 
-              }else {
-        listCart = event.data()!['cart'];
-
-        listCart.forEach((element) {
-
-          listCartModel.add(CartModel.fromJson(element));
-          if(element['adminId']!=null)
-          listAdmin.add(element['adminId']);
-
-        });
-        print(listCart);
-
-        print('list admin${listAdmin.toSet().toList()}');
+          print('list admin${listAdmin.toSet().toList()}');
 
 
-        emit(GetCartSuccessState());
-      }
-
-     });
+          emit(GetCartSuccessState());
+        }
+      });
+    }
       // .then((value) {
     //       if(value.data()==null||value.data()!['cart']==null){
     //         FirebaseFirestore.instance
