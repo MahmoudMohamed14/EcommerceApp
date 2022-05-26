@@ -3,6 +3,8 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:projectgraduate/moduls/addProduct/addproduct_screen.dart';
+import 'package:projectgraduate/moduls/add_category/add_category_screen.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/cubit_layout.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
 import 'package:projectgraduate/moduls/login/login_screen.dart';
@@ -72,26 +74,36 @@ class LayoutScreen extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                        child: InkWell(
+                          onTap: (){
+                            navigateTo(context, AddCategoryScreen());
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
 
-                          children: [
-                            Icon(IconBroken.Plus,),
-                            const SizedBox(width: 7,),
-                            Text( 'Add Category',style: TextStyle(color: ColorManager.primary),),
-                          ],
+                            children: [
+                              Icon(IconBroken.Plus,),
+                              const SizedBox(width: 7,),
+                              Text( 'Add Category',style: TextStyle(color: ColorManager.primary),),
+                            ],
+                          ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                      InkWell(
+                        onTap: (){
+                          navigateTo(context, AddProductScreen());
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
 
-                          children: [
-                            Icon(IconBroken.Plus,),
-                            const SizedBox(width: 7,),
-                            Text( 'Add Product',style: TextStyle(color: ColorManager.primary),),
-                          ],
+                            children: [
+                              Icon(IconBroken.Plus,),
+                              const SizedBox(width: 7,),
+                              Text( 'Add Product',style: TextStyle(color: ColorManager.primary),),
+                            ],
+                          ),
                         ),
                       ),
                     ],

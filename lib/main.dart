@@ -1,3 +1,5 @@
+
+
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,6 +22,7 @@ void main()async {
   WidgetsFlutterBinding.ensureInitialized();
   await CacheHelper.init();
 
+
   if(CacheHelper.getData(key: 'uId')!=null){
     uId=CacheHelper.getData(key: 'uId');
   }
@@ -28,12 +31,12 @@ void main()async {
   }
 
   await Firebase.initializeApp(
-    // options:  FirebaseOptions(
-    //   apiKey: 'AIzaSyAsNOLf5LmI1qFybvPaHFT7LEFFdPnbYMk',
-    //   appId: "1:766788020496:android:4e946006d46fab771e9d95",
-    //   messagingSenderId: '766788020496',
-    //   projectId: 'projectgraduate-ba744',
-    // ),
+    options:  const FirebaseOptions(
+       apiKey: 'AIzaSyBNbo9Rhzn6sJ3vRD-rha7n1jkVNw1erHM',
+      appId: "1:355062523045:android:84976dc685c7fa42fad94c",
+       messagingSenderId: '355062523045',
+       projectId: 'graduateproject-996fc',
+     ),
     );
 
   BlocOverrides.runZoned(
