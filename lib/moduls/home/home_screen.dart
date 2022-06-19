@@ -2,7 +2,7 @@
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,7 +37,7 @@ class HomeScreen extends StatelessWidget {
       builder:(context,state){
         var cubit=CubitLayout.get(context);
         return ConditionalBuilder(
-          condition: cubit.listAllCategory!.isNotEmpty&cubit.listAllProduct!.isNotEmpty,
+          condition: cubit.listAllCategory!.isNotEmpty ,//&& cubit.listAllProduct!.isNotEmpty,
           builder: (context)=>SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(20),
@@ -168,6 +168,7 @@ class HomeScreen extends StatelessWidget {
         navigateTo(context, DetailsScreen (productsData));
       },
       child: Card(
+
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
 
@@ -183,7 +184,7 @@ class HomeScreen extends StatelessWidget {
                 alignment: AlignmentDirectional.bottomStart,
                 children: [
                   Container(
-                    height: 150,
+                    height: 200,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
 
@@ -246,7 +247,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
  static Widget buildGridProduct(List list,context){
-    return defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android? GridView.count(
+    return GridView.count(
       crossAxisCount:2,
       shrinkWrap: true,
       mainAxisSpacing: AppSize.s1,
@@ -258,23 +259,23 @@ class HomeScreen extends StatelessWidget {
 
 
         return buildProductItem(list[index], context);
-      }),
+      }));
 
-    ): GridView.count(
-      crossAxisCount:4,
-      shrinkWrap: true,
-      mainAxisSpacing: AppSize.s1,
-      crossAxisSpacing:AppSize.s1 ,
-
-      childAspectRatio: 1/1.3,
-      physics: const NeverScrollableScrollPhysics(),
-      children: List.generate(list.length, (index) {
-
-
-        return buildProductItem(list[index], context);
-      }),
-
-    );
+    // ): GridView.count(
+    //   crossAxisCount:4,
+    //   shrinkWrap: true,
+    //   mainAxisSpacing: AppSize.s1,
+    //   crossAxisSpacing:AppSize.s1 ,
+    //
+    //   childAspectRatio: 1/1.3,
+    //   physics: const NeverScrollableScrollPhysics(),
+    //   children: List.generate(list.length, (index) {
+    //
+    //
+    //     return buildProductItem(list[index], context);
+    //   }),
+    //
+    // );
 
   }
   Widget buildCategoryItem(context,CategoryModel categoryModel){

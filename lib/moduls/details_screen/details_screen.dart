@@ -84,10 +84,10 @@ class DetailsScreen extends StatelessWidget {
 
                   }
                   if(value=='edit'){
-             final reslt=  await  Navigator.push(context,MaterialPageRoute(builder: (context)=> AddProductScreen(isEdit: true,productModel: productModel,)));
-             if(reslt!=null){
-               print(reslt.toMap());
-               productModel=reslt;
+             final result=  await  Navigator.push(context,MaterialPageRoute(builder: (context)=> AddProductScreen(isEdit: true,productModel: productModel,)));
+             if(result!=null){
+               print(result.toMap());
+               productModel=result;
 
 
              }

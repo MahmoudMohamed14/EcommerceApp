@@ -24,19 +24,10 @@ class OrderDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    orderModel!.orderProducts!.forEach((element) {
-      if(CacheHelper.getData(key: 'admin')){
-        if(element['adminId']==CacheHelper.getData(key: 'uId')){
-          listcat.add(CartModel.fromJson(element));
-        }
 
 
-      }else{
-        listcat.add(CartModel.fromJson(element));
-      }
+   CubitLayout.get(context).getProductForEachVender(orderModel!);
 
-
-    });
     return BlocConsumer<CubitLayout,StateLayout>(
         listener: (context,state){
           if(state is CancelOrderSuccessState ||state is DoneOrderSuccessState){
@@ -45,6 +36,9 @@ class OrderDetails extends StatelessWidget {
         },
     builder:(context,state){
     var cubit=CubitLayout.get(context);
+    
+
+    listcat=cubit.listproductOrderForVenderOrCuctomer;
 
     return Scaffold(
       appBar: AppBar(
@@ -85,7 +79,7 @@ class OrderDetails extends StatelessWidget {
               Row(
                 children: [
                   Text('Total Price: ',style: Theme.of(context).textTheme.headline1,),
-                  Text('${orderModel!.totalPrice}LE',style: Theme.of(context).textTheme.headline2,),
+                  Text('${cubit.calculateTotalPriceCartOrder(listcat)}LE',style: Theme.of(context).textTheme.headline2,),
                 ],
               ),
               SizedBox(height: 20,),

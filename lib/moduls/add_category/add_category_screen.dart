@@ -44,7 +44,7 @@ class AddCategoryScreen extends StatelessWidget {
 
 
           appBar: AppBar(
-            title: Text(isEdit?'EditProduct':'AddProduct'),
+            title: Text(isEdit?'EditCategory':'AddCategory'),
           ),
           body: SingleChildScrollView(
             child: Padding(

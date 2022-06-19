@@ -8,8 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/cubit_layout.dart';
 import 'package:projectgraduate/moduls/layout_screen/layout_cubit/states_layout.dart';
-import 'package:projectgraduate/shared/constant/data_shared.dart';
 
+import 'package:projectgraduate/shared/constant/data_shared.dart';
 import 'bloc_observer.dart';
 import 'moduls/layout_screen/layout_screan.dart';
 import 'moduls/login/login_screen.dart';
@@ -31,12 +31,12 @@ void main()async {
   }
 
   await Firebase.initializeApp(
-    options:  const FirebaseOptions(
-       apiKey: 'AIzaSyBNbo9Rhzn6sJ3vRD-rha7n1jkVNw1erHM',
-      appId: "1:355062523045:android:84976dc685c7fa42fad94c",
-       messagingSenderId: '355062523045',
-       projectId: 'graduateproject-996fc',
-     ),
+    // options:   FirebaseOptions(
+    //    apiKey: 'AIzaSyBNbo9Rhzn6sJ3vRD-rha7n1jkVNw1erHM',
+    //   appId: "1:355062523045:android:84976dc685c7fa42fad94c",
+    //    messagingSenderId: '355062523045',
+    //    projectId: 'graduateproject-996fc',
+    //  ),
     );
 
   BlocOverrides.runZoned(
@@ -64,7 +64,7 @@ class MyApp extends StatelessWidget {
         builder: (context,stste){
           return MaterialApp(
 
-            debugShowCheckedModeBanner: false,
+           debugShowCheckedModeBanner: false,
             theme:getApplicationTheme(context),
             supportedLocales:const [
               Locale('en',),
@@ -77,8 +77,7 @@ class MyApp extends StatelessWidget {
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
-
-            ],
+ ],
             localeResolutionCallback: (currentLang,supportedLang){
               if(currentLang!=null){
                 for(Locale local in supportedLang){
@@ -91,6 +90,7 @@ class MyApp extends StatelessWidget {
               return supportedLang.first;
             },
             home: launcherScreen(iscurrentuser: FirebaseAuth.instance.currentUser!=null,loginScreen: LoginScreen(), homeScreen: LayoutScreen()),
+
           );
         },
 

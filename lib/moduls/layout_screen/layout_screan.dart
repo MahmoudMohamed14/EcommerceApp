@@ -70,7 +70,7 @@ class LayoutScreen extends StatelessWidget {
                     ),
                      ),
                   ),
-                if  ( CacheHelper.getData(key: 'admin') ) Column(
+                if  ( CacheHelper.getData(key: 'admin') && requestAdmin==false ) Column(
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(10),

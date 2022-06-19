@@ -44,6 +44,7 @@ class OrderScreen extends StatelessWidget {
 
 
 Widget orderBuildItem(context,OrderModel orderModel){
+    CubitLayout.get(context).getProductForEachVender(orderModel);
     return  GestureDetector(
       onTap: (){
 
@@ -78,7 +79,7 @@ Widget orderBuildItem(context,OrderModel orderModel){
               children: [
                 Text('Total',style: Theme.of(context).textTheme.headline1,),
                 Spacer(),
-                Text('${orderModel.totalPrice}',style: Theme.of(context).textTheme.headline2,),
+                Text('${CubitLayout.get(context).calculateTotalPriceCartOrder(CubitLayout.get(context).listproductOrderForVenderOrCuctomer)}',style: Theme.of(context).textTheme.headline2,),
 
               ],
 

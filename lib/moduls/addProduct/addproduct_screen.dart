@@ -91,9 +91,9 @@ class AddProductScreen extends StatelessWidget {
           appBar: AppBar(
             title: Text(isEdit!?'EditProduct':'AddProduct'),
           ),
-          body: Padding(
-            padding: const EdgeInsets.all(20),
-            child: SingleChildScrollView(
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
               child: Form(
                 key: keyForm,
                 child: Column(

@@ -44,7 +44,7 @@ class CubitLayout extends Cubit<StateLayout> {
 
     Icon( IconBroken.Add_User, size: 35,color: ColorManager.white,),];
   List<Widget>listIconAdmin=[
-    CircleAvatar(backgroundImage: AssetImage('assets/image/order.png'),radius: 22,),
+    const CircleAvatar(backgroundImage: AssetImage('assets/image/order.png'),radius: 22,),
     Icon(IconBroken.Home, size: 35,color: ColorManager.white,),
 
     Icon( IconBroken.Profile, size: 35,color: ColorManager.white,),];
@@ -205,20 +205,20 @@ class CubitLayout extends Cubit<StateLayout> {
         .get()
         .then((value) {
           if(CacheHelper.getData(key: 'admin')){
-            value.docs.forEach((element) {
+            for (var element in value.docs) {
               print(element.data()['old_Price']);
               if(element.data()['adminId']==uId){
                 listAllProduct!.add(ProductModel.fromJson(element.data()));
               }
 
 
-            });
+            }
           }else{
-            value.docs.forEach((element) {
+            for (var element in value.docs) {
               print(element.data()['old_Price']);
               listAllProduct!.add(ProductModel.fromJson(element.data()));
 
-            });
+            }
           }
 
           emit(GetProductSuccessState());
@@ -266,7 +266,7 @@ class CubitLayout extends Cubit<StateLayout> {
     Reference reference= FirebaseStorage.instance
         .ref()
         .child('users').child('/${Uri.file(categoryImage!.path).pathSegments.last}');
-    UploadTask uploadTask =reference.putFile(categoryImage!);
+    UploadTask uploadTask =  reference.putFile(categoryImage!) ;
     uploadTask.whenComplete(() {
       reference.getDownloadURL().then((value) {
         categoryImageUrl=value;
@@ -352,20 +352,20 @@ class CubitLayout extends Cubit<StateLayout> {
         .get()
         .then((value) {
       if(CacheHelper.getData(key: 'admin')){
-        value.docs.forEach((element) {
+        for (var element in value.docs) {
           print(element.data()['old_Price']);
           if(element.data()['adminId']==uId){
             listAllCategory!.add(CategoryModel.fromJson(element.data()));
           }
 
-        });
+        }
       }else{
-        value.docs.forEach((element) {
+        for (var element in value.docs) {
           print('hajyg');
           print(element.data()['old_Price']);
           listAllCategory!.add(CategoryModel.fromJson(element.data()));
 
-        });
+        }
       }
 
 
@@ -401,7 +401,7 @@ class CubitLayout extends Cubit<StateLayout> {
     FirebaseFirestore.instance
         .collection('users').snapshots().listen((event) {
           listAllUser=[];
-          event.docs.forEach((element) {
+          for (var element in event.docs) {
             if(element.data()!=null){
               if(element.data()['requestAdmin'] !=null){
                 if(element.data()['requestAdmin']){
@@ -410,9 +410,43 @@ class CubitLayout extends Cubit<StateLayout> {
               }
             }
 
-          });
+          }
           emit( GetAllUserSuccessState ());
     });
+
+  }
+  List<CartModel>listproductOrderForVenderOrCuctomer=[];
+  void getProductForEachVender(OrderModel orderModel){
+    listproductOrderForVenderOrCuctomer=[];
+
+    for (var element in orderModel.orderProducts!) {
+      if(CacheHelper.getData(key: 'admin')){
+        if(element['adminId']==CacheHelper.getData(key: 'uId')){
+          listproductOrderForVenderOrCuctomer.add(CartModel.fromJson(element));
+        }
+
+
+      }else{
+        listproductOrderForVenderOrCuctomer.add(CartModel.fromJson(element));
+      }
+
+    }
+
+        }
+
+
+
+  double calculateTotalPriceCartOrder(List<CartModel> listCart){
+    double total=0;
+     if(listCart.isNotEmpty) {
+       for (var element in listCart) {
+         total += (double.parse(element.price.toString()) *
+             double.parse(element.quantity.toString()));
+       }
+     }
+
+    return total;
+
 
   }
   void acceptRequestAdmin({required String id}){
@@ -481,11 +515,11 @@ class CubitLayout extends Cubit<StateLayout> {
 
   List<ProductModel> getCategoryList({String ?categoryName}) {
     List<ProductModel> categoryList=[];
-    listAllProduct!.forEach((element) {
+    for (var element in listAllProduct!) {
       if(element.category==categoryName){
         categoryList.add(element);
       }
-    });
+    }
     return categoryList;
   }
   List<CartModel> listCartModel=[];
@@ -531,11 +565,11 @@ class CubitLayout extends Cubit<StateLayout> {
         } else {
           listCart = event.data()!['cart'];
 
-          listCart.forEach((element) {
+          for (var element in listCart) {
             listCartModel.add(CartModel.fromJson(element));
             if (element['adminId'] != null)
               listAdmin.add(element['adminId']);
-          });
+          }
           print(listCart);
 
           print('list admin${listAdmin.toSet().toList()}');
@@ -591,10 +625,10 @@ class CubitLayout extends Cubit<StateLayout> {
   }
   void updateToCart(CartModel cartModel,int index){
     listCartModel[index]=cartModel;
-    listCartModel.forEach((element) {
+    for (var element in listCartModel) {
       list .add(element.toMap());
 
-    });
+    }
 
     FirebaseFirestore.instance
         .collection('users')
@@ -614,12 +648,12 @@ class CubitLayout extends Cubit<StateLayout> {
     totalOfCart=0;
     listProductOfOrder=[];
     if(listCartModel.length>0){
-      listCartModel.forEach((element) {
+      for (var element in listCartModel) {
 
         totalOfCart+=(element.price   * element.quantity);
         listProductOfOrder.add(element.toMap());
 
-      });
+      }
     }
     return totalOfCart ;
 
@@ -677,19 +711,19 @@ class CubitLayout extends Cubit<StateLayout> {
         .collection('order')
         .get()
         .then((value) {
-          value.docs.forEach((element) {
+          for (var element in value.docs) {
             if(element.data()['orderState']=='Pending') {
               admin= element.data()['listAdminId']  ;
               print(" admin ${list}");
 
               if(CacheHelper.getData(key: 'admin')){
 
-              admin.forEach((admin) {
+              for (var admin in admin) {
                 if(admin==uId){
                   listPendingOrder.add(OrderModel.fromJson(element.data()));
                 }
 
-              });
+              }
 
 
 
@@ -707,12 +741,12 @@ class CubitLayout extends Cubit<StateLayout> {
               admin= element.data()['listAdminId']  ;
               if(CacheHelper.getData(key: 'admin')){
 
-                admin.forEach((admin) {
+                for (var admin in admin) {
                   if(admin==uId){
                     listCancelOrder.add(OrderModel.fromJson(element.data()));
                   }
 
-                });
+                }
 
               }else {
                 if(element.data()['customerId']==uId){
@@ -723,12 +757,12 @@ class CubitLayout extends Cubit<StateLayout> {
               admin= element.data()['listAdminId']  ;
 
               if(CacheHelper.getData(key: 'admin')){
-                admin.forEach((admin) {
+                for (var admin in admin) {
                   if(admin==uId){
                     listCancelOrder.add(OrderModel.fromJson(element.data()));
                   }
 
-                });
+                }
 
               }else {
                 if(element.data()['customerId']==uId){
@@ -738,7 +772,7 @@ class CubitLayout extends Cubit<StateLayout> {
             }
             print( listCancelOrder);
 
-          });
+          }
 
       emit(GetOrderSuccessState ());
     })
