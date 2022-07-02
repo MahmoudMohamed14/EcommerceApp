@@ -759,7 +759,7 @@ class CubitLayout extends Cubit<StateLayout> {
               if(CacheHelper.getData(key: 'admin')){
                 for (var admin in admin) {
                   if(admin==uId){
-                    listCancelOrder.add(OrderModel.fromJson(element.data()));
+                   listDoneOrder.add(OrderModel.fromJson(element.data()));
                   }
 
                 }
